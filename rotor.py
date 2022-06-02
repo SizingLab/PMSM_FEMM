@@ -1,3 +1,4 @@
+from attr import get_run_validators
 import femm
 import numpy as np
 from math import pi, cos, sin, asin, tan
@@ -74,8 +75,10 @@ class BaseRotor:
     def print_variables(self):
         self.build_data_frame()
         widgets.interact(self.f, Component=set(self.data_frame.Component))
+ 
+### (Aurélien) Découpage de la classe IPM en deux classes : une pour le modèle et une pour la géométrie.
 
-class IPM(BaseRotor):
+class IPM_Model(BaseRotor):
     """~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Motor geometric variables definition (BLAC_parametres_geometrie)_IPM
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
@@ -117,11 +120,11 @@ class IPM(BaseRotor):
     TailleMailleBobine= Variable('TailleMailleBobine', 1, '[-]', 'Mesh size for the winding')
     
     
-    def __init__(self, femm_wrapper, motif='10/12', repetition='1', Np=Np, Np_ref=Np_ref, KNp=KNp, SDe=SDe, SRi=SRi, ALa=ALa, RRi=RRi, J_den=J_den, SRe=SRe, SRe_ref=SRe_ref, K=K, SEt=SEt, e=e, RRe=RRe, RLo=RLo, RLa=RLa, ALo=ALo, ARi=ARi, ARe=ARe, TailleMailleEntrefer=TailleMailleEntrefer, TailleMaille=TailleMaille, TailleMailleJeu=TailleMailleJeu, TailleMailleBobine=TailleMailleBobine):
+    def __init__(self, motif='10/12', repetition='1', Np=Np, Np_ref=Np_ref, KNp=KNp, SDe=SDe, SRi=SRi, ALa=ALa, RRi=RRi, J_den=J_den, SRe=SRe, SRe_ref=SRe_ref, K=K, SEt=SEt, e=e, RRe=RRe, RLo=RLo, RLa=RLa, ALo=ALo, ARi=ARi, ARe=ARe, TailleMailleEntrefer=TailleMailleEntrefer, TailleMaille=TailleMaille, TailleMailleJeu=TailleMailleJeu, TailleMailleBobine=TailleMailleBobine):
         
-        # super(BaseRotor, self).__init__()
+        #super(BaseRotor, self).__init__()
         super().__init__()
-        # self.parameters = {}
+        #self.parameters = {}
         self.motif = motif
         self.repetition = repetition
         self.parameters[Np.name] = Np
@@ -147,14 +150,23 @@ class IPM(BaseRotor):
         self.parameters[TailleMaille.name] = TailleMaille
         self.parameters[TailleMailleJeu.name] = TailleMailleJeu
         self.parameters[TailleMailleBobine.name] = TailleMailleBobine
-        
-        self.femm_wrapper = femm_wrapper
-        
+
+class IPM_GeomGeneration(BaseRotor):
+
+    def __init__(self, IPMModel, femm_wrapper):
+        self.IPMModel =  IPMModel
+        self.femm_wrapper = femm_wrapper  
+        """SRe=self.IPMModel.parameters[SRe.name]"""
+
     def get_value(self, name):
-        return self.parameters[name].value
+        
+        return self.IPMModel.parameters[name].value
+
+    """if __name__ == '__main__':
+        print(SRe)"""
     
     def variable_calcul(self,SRe,J_den):
-        return self.SRe.value, self.J_den.value
+        return self.IPMModel.SRe.value, self.IPMModel.J_den.value
     
     def draw(self, stator):
         repetition = self.repetition
@@ -673,6 +685,12 @@ class SPM(BaseRotor):
 
     def get_value(self,name):
         return self.parameters[name].value
+
+    
+    
+    """if __name__ == '__main__':
+
+    print(SPM.get_value('name'))"""
         
     def draw(self, stator):        
         

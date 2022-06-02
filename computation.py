@@ -3,6 +3,7 @@ from math import pi, cos, sin, sqrt
 import numpy as np
 import time
 start=time.time()
+import motor
 
 def compute(motor):
     # Stator variables

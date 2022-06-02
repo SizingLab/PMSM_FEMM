@@ -8,27 +8,29 @@ import pandas as pd
 ### (Aurélien) Rajouter une focntion execute_model pour le openfemm etc...
 ### Pour générer un modèle magnétique -> à utiliser dans le main
 
-class PM_motor_mag:
+class PM_motor:
     
     def __init__(self, femm_wrapper, rotor_type, stator_type, motif, repetition):
         
         self.motif = motif
         self.repetition = repetition
-        self.
+        ### Ajout du femm_wrapper en attribut
+
+        self.femm_wrapper = femm_wrapper
 
 #        self.segmentation = segmentation
         
         if rotor_type == 'IPM':
-            self.rotor = IPM(motif=self.motif, repetition=self.repetition)
+            self.rotor = IPM(femm_wrapper=self.femm_wrapper, motif=self.motif, repetition=self.repetition)
         elif rotor_type == 'SPM':
-            self.rotor = SPM(motif=self.motif, repetition=self.repetition)
+            self.rotor = SPM(femm_wrapper=self.femm_wrapper, motif=self.motif, repetition=self.repetition)
         elif rotor_type == 'Halbach':
-            self.rotor = Halbach(motif=self.motif, repetition=self.repetition)
+            self.rotor = Halbach(femm_wrapper=self.femm_wrapper, motif=self.motif, repetition=self.repetition)
         else: 
             raise TypeError('Unknown rotor type')
                 
         if stator_type == 'concentrated':
-            self.stator = Concentrated(rotor_type=rotor_type, motif=self.motif, repetition=self.repetition)
+            self.stator = Concentrated(femm_wrapper=self.femm_wrapper, rotor_type=rotor_type, motif=self.motif, repetition=self.repetition)
         else: 
             raise TypeError('Unknown stator type')
 
@@ -85,47 +87,3 @@ class PM_motor_mag:
         self.data_frame.append(self.rotor.data_frame)
         self.data_frame.append(self.stator.data_frame)
 
-### Pour générer un modèle thermique -> à utiliser dans le main
-
-class PM_motor_thermal:
-
-    def __init__(self, femm_wrapper, rotor_type, stator_type, motif, repetition):
-        
-        self.motif = motif
-        self.repetition = repetition
-#        self.segmentation = segmentation
-        
-        if rotor_type == 'IPM':
-            self.rotor = IPM(motif=self.motif, repetition=self.repetition)
-        elif rotor_type == 'SPM':
-            self.rotor = SPM(motif=self.motif, repetition=self.repetition)
-        elif rotor_type == 'Halbach':
-            self.rotor = Halbach(motif=self.motif, repetition=self.repetition)
-        else: 
-            raise TypeError('Unknown rotor type')
-                
-        if stator_type == 'concentrated':
-            self.stator = Concentrated(rotor_type=rotor_type, motif=self.motif, repetition=self.repetition)
-        else: 
-            raise TypeError('Unknown stator type')
-
-        self.data_frame = pd.DataFrame()
-        
-    def get_rotor(self):
-        return self.rotor
-        
-    def get_stator(self):
-        return self.stator
-    
-    def get_motif(self):
-        return self.motif
-    
-    def get_repetition(self):
-        return self.repetition
-    
-    def draw(self):
-        stator=self.stator
-        self.stator.draw_preliminary()
-        self.rotor.draw(stator)
-        self.stator.draw()
-        
