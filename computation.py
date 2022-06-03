@@ -14,7 +14,7 @@ def compute(motor):
     SPx = motor.stator.SPx
     SPy = motor.stator.SPy
     NbDemiEncoche = motor.stator.parameters['NbDemiEncoche'].value
-    SK2Ix = motor.stator.SK2Ix
+    SK2Ix = motor.stator.SK2Ix 
     SK2Iy = motor.stator.SK2Iy
     SAngElec = motor.stator.parameters['SAngElec']
     SUx = motor.stator.SUx

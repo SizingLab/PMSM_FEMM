@@ -1,6 +1,6 @@
 import femm
 from variable import Variable
-from rotor import IPM, SPM, Halbach
+from rotor import IPM, SPM, Halbach, IPM_Model
 import numpy as np
 from math import pi, cos, sin, asin, floor, tan, sqrt
 
@@ -32,12 +32,15 @@ class Concentrated:
 
     """ Definition of the exterior contour limiting the problem """
 
+### (Aurélien) Ajout du femm_wrapper
+
     def __init__(self, femm_wrapper, rotor_type='IPM', motif='10/12', repetition='1', SEp=SEp, SLd=SLd, Ne=Ne, Ne_ref=Ne_ref, KNe=KNe, NbDemiEncoche=NbDemiEncoche, 
                  ACwind=ACwind, SLa=SLa, SLo=SLo, SAngDepEncoche=SAngDepEncoche, SHc=SHc, SHjx=SHjx, SHjy=SHjy, 
                  SENomex=SENomex, SRiNomex=SRiNomex, SNShunt=SNShunt, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w):
         
         if rotor_type == 'IPM':
-            self.rotor = IPM()
+### (Aurélien) Changement en IPM_Model
+            self.rotor = IPM_Model()
         elif rotor_type == 'SPM':
             self.rotor = SPM()
         elif rotor_type == 'Halbach':

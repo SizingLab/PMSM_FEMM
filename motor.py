@@ -1,5 +1,5 @@
 from stator import Concentrated
-from rotor import IPM, SPM, Halbach
+from rotor import IPM_Model, IPM_GeomGeneration, SPM_Model, SPM_GeomGeneration, Halbach_Model ,Halbach_GeomGenneration
 import numpy as np
 from computation import compute
 

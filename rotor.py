@@ -169,35 +169,35 @@ class IPM_GeomGeneration(BaseRotor):
         return self.IPMModel.SRe.value, self.IPMModel.J_den.value
     
     def draw(self, stator):
-        repetition = self.repetition
-        self.parameters['Np'].value = int(self.motif.split('/')[0])
-        Np = self.parameters['Np'].value
-        Np_ref = self.parameters['Np_ref'].value
+        repetition = self.IPMModel.repetition
+        self.IPMModel.parameters['Np'].value = int(self.IPMModel.motif.split('/')[0])
+        Np = self.IPMModel.parameters['Np'].value
+        Np_ref = self.IPMModel.parameters['Np_ref'].value
         
-        self.parameters['KNp'].value = Np/Np_ref
-        KNp = self.parameters['KNp'].value
+        self.IPMModel.parameters['KNp'].value = Np/Np_ref
+        KNp = self.IPMModel.parameters['KNp'].value
 
-        K = self.parameters['K'].value
-        Np_ref = self.parameters['Np_ref'].value
-        SRi = self.parameters['SRi'].value*K
-        ALa = self.parameters['ALa'].value*K/(KNp*repetition)
-        RRi = self.parameters['RRi'].value*K
-        e = self.parameters['e'].value*K
-        self.parameters['RRe'].value = SRi-e
-        RRe = self.parameters['RRe'].value
-        RLo = self.parameters['RLo'].value*K/KNp
-        RLa = self.parameters['RLa'].value*K/KNp
-        self.parameters['ALo'].value = 0.88*RRe-RRi
-        ALo = self.parameters['ALo'].value
-        self.parameters['ARi'].value = RRi + RLo
-        ARi = self.parameters['ARi'].value
-        self.parameters['ARe'].value = ARi+ALo
-        ARe = self.parameters['ARe'].value
-        self.parameters['TailleMailleEntrefer'].value = e/2
-        TailleMailleEntrefer = self.parameters['TailleMailleEntrefer'].value
-        TailleMaille = self.parameters['TailleMaille'].value*K
-        self.parameters['SRe'].value = self.parameters['SDe'].value/2
-        SRe = self.parameters['SRe'].value
+        K = self.IPMModel.parameters['K'].value
+        Np_ref = self.IPMModel.parameters['Np_ref'].value
+        SRi = self.IPMModel.parameters['SRi'].value*K
+        ALa = self.IPMModel.parameters['ALa'].value*K/(KNp*repetition)
+        RRi = self.IPMModel.parameters['RRi'].value*K
+        e = self.IPMModel.parameters['e'].value*K
+        self.IPMModel.parameters['RRe'].value = SRi-e
+        RRe = self.IPMModel.parameters['RRe'].value
+        RLo = self.IPMModel.parameters['RLo'].value*K/KNp
+        RLa = self.IPMModel.parameters['RLa'].value*K/KNp
+        self.IPMModel.parameters['ALo'].value = 0.88*RRe-RRi
+        ALo = self.IPMModel.parameters['ALo'].value
+        self.IPMModel.parameters['ARi'].value = RRi + RLo
+        ARi = self.IPMModel.parameters['ARi'].value
+        self.IPMModel.parameters['ARe'].value = ARi+ALo
+        ARe = self.IPMModel.parameters['ARe'].value
+        self.IPMModel.parameters['TailleMailleEntrefer'].value = e/2
+        TailleMailleEntrefer = self.IPMModel.parameters['TailleMailleEntrefer'].value
+        TailleMaille = self.IPMModel.parameters['TailleMaille'].value*K
+        self.IPMModel.parameters['SRe'].value = self.IPMModel.parameters['SDe'].value/2
+        SRe = self.IPMModel.parameters['SRe'].value
 
 
         MaxSegDegPE1 = stator.MaxSegDegPE1 
@@ -617,7 +617,7 @@ class IPM_GeomGeneration(BaseRotor):
         self.femm_wrapper.clearselected() 
 
 
-class SPM(BaseRotor): 
+class SPM_Model(BaseRotor): 
     """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Motor geometric variables definition (BLAC_parametres_geometrie)_SPM
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
@@ -654,8 +654,9 @@ class SPM(BaseRotor):
     TailleMailleBobine= Variable('TailleMailleBobine', 1, '[-]', 'Mesh size for the winding')
 
 
+### (Aurélien) On enlève le femm_wrapper du init de base
 
-    def __init__(self, femm_wrapper, motif='10/12', repetition='1', Np=Np, SDe=SDe, SRe=SRe, SRe_ref=SRe_ref, K=K, ALo=ALo, RRi=RRi, SRi=SRi, J_den=J_den, SEt=SEt, ALa=ALa, 
+    def __init__(self, motif='10/12', repetition='1', Np=Np, SDe=SDe, SRe=SRe, SRe_ref=SRe_ref, K=K, ALo=ALo, RRi=RRi, SRi=SRi, J_den=J_den, SEt=SEt, ALa=ALa, 
                  e=e, RRe=RRe, Nsp=Nsp, TailleMailleEntrefer=TailleMailleEntrefer, TailleMaille=TailleMaille, 
                  TailleMailleJeu=TailleMailleJeu, TailleMailleBobine=TailleMailleBobine):
         
@@ -681,10 +682,16 @@ class SPM(BaseRotor):
         self.parameters[TailleMaille.name] = TailleMaille
         self.parameters[TailleMailleJeu.name] = TailleMailleJeu
         self.parameters[TailleMailleBobine.name] = TailleMailleBobine
-        self.femm_wrapper = femm_wrapper
+
+class SPM_GeomGeneration(BaseRotor):
+
+    def __init__(self, SPMModel, femm_wrapper):
+        
+        self.SPMModel =  SPMModel
+        self.femm_wrapper = femm_wrapper  
 
     def get_value(self,name):
-        return self.parameters[name].value
+        return self.SPMModel.parameters[name].value
 
     
     
@@ -694,30 +701,30 @@ class SPM(BaseRotor):
         
     def draw(self, stator):        
         
-        repetition =self.repetition
-        self.parameters['SRe'].value = self.parameters['SDe'].value/2
-        SRe = self.parameters['SRe'].value
-        RRi = self.parameters['RRi'].value
-        K = self.parameters['K'].value
+        repetition =self.SPMModel.repetition
+        self.parameters['SRe'].value = self.SPMModel.parameters['SDe'].value/2
+        SRe = self.SPMModel.parameters['SRe'].value
+        RRi = self.SPMModel.parameters['RRi'].value
+        K = self.SPMModel.parameters['K'].value
         
         
-        self.parameters['Np'].value = float(self.motif.split('/')[0])
-        Np = self.parameters['Np'].value
-        Nsp = self.parameters['Nsp'].value
-        self.parameters['TailleMaille'].value = self.parameters['TailleMaille'].value*K
-        TailleMaille = self.parameters['TailleMaille'].value
-        ALo = self.parameters['ALo'].value*K
-        RRi = self.parameters['RRi'].value*K
-        SRi = self.parameters['SRi'].value*K
-        ALa = self.parameters['ALa'].value*K
+        self.SPMModel.parameters['Np'].value = float(self.motif.split('/')[0])
+        Np = self.SPMModel.parameters['Np'].value
+        Nsp = self.SPMModel.parameters['Nsp'].value
+        self.SPMModel.parameters['TailleMaille'].value = self.SPMModel.parameters['TailleMaille'].value*K
+        TailleMaille = self.SPMModel.parameters['TailleMaille'].value
+        ALo = self.SPMModel.parameters['ALo'].value*K
+        RRi = self.SPMModel.parameters['RRi'].value*K
+        SRi = self.SPMModel.parameters['SRi'].value*K
+        ALa = self.SPMModel.parameters['ALa'].value*K
         
-        self.parameters['e'].value = ALo + 1.2*K
-        e = self.parameters['e'].value
-        self.parameters['RRe'].value = SRi-e
-        RRe = self.parameters['RRe'].value
+        self.SPMModel.parameters['e'].value = ALo + 1.2*K
+        e = self.SPMModel.parameters['e'].value
+        self.SPMModel.parameters['RRe'].value = SRi-e
+        RRe = self.SPMModel.parameters['RRe'].value
         
-        self.parameters['TailleMailleEntrefer'].value = self.parameters['TailleMailleEntrefer'].value*K
-        TailleMailleEntrefer = self.parameters['TailleMailleEntrefer'].value
+        self.SPMModel.parameters['TailleMailleEntrefer'].value = self.SPMModel.parameters['TailleMailleEntrefer'].value*K
+        TailleMailleEntrefer = self.SPMModel.parameters['TailleMailleEntrefer'].value
         
         """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                          Draw Rotor
@@ -884,7 +891,7 @@ class SPM(BaseRotor):
             self.femm_wrapper.deleteselected()
             self.femm_wrapper.clearselected()
             
-class Halbach(BaseRotor):
+class Halbach_Model(BaseRotor):
     """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Motor geometric variables definition (BLAC_parametres_geometrie)_SPM_HALBACH
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
@@ -922,7 +929,7 @@ class Halbach(BaseRotor):
 
 
 
-    def __init__(self, femm_wrapper, motif='10/12', repetition='1', segmentation='1', Np=Np, SDe=SDe, SRe=SRe, SRe_ref=SRe_ref, K=K, ALo=ALo, RRi=RRi, SRi=SRi, J_den=J_den, SEt=SEt, ALa=ALa, 
+    def __init__(self, motif='10/12', repetition='1', segmentation='1', Np=Np, SDe=SDe, SRe=SRe, SRe_ref=SRe_ref, K=K, ALo=ALo, RRi=RRi, SRi=SRi, J_den=J_den, SEt=SEt, ALa=ALa, 
                  e=e, RRe=RRe, Nsp=Nsp, TailleMailleEntrefer=TailleMailleEntrefer, TailleMaille=TailleMaille, 
                  TailleMailleJeu=TailleMailleJeu, TailleMailleBobine=TailleMailleBobine):
         
@@ -949,36 +956,42 @@ class Halbach(BaseRotor):
         self.parameters[TailleMaille.name] = TailleMaille
         self.parameters[TailleMailleJeu.name] = TailleMailleJeu
         self.parameters[TailleMailleBobine.name] = TailleMailleBobine
-        self.femm_wrapper = femm_wrapper
+
+class Halbach_GeomGenneration(BaseRotor):
+
+    def __init__(self, HalbachModel, femm_wrapper):
+        
+        self.HalbachModel =  HalbachModel
+        self.femm_wrapper = femm_wrapper  
 
     def get_value(self,name):
-        return self.parameters[name].value
+        return self.HalbachModel.parameters[name].value
         
     def draw(self, stator):
 
-        repetition = self.repetition
-        self.parameters['SRe'].value = self.parameters['SDe'].value/2
-        SRe = self.parameters['SRe'].value
+        repetition = self.HalbachModel.repetition
+        self.HalbachModel.parameters['SRe'].value = self.HalbachModel.parameters['SDe'].value/2
+        SRe = self.HalbachModel.parameters['SRe'].value
 
-        K = self.parameters['K'].value
+        K = self.HalbachModel.parameters['K'].value
         
-        self.parameters['Np'].value = float(self.motif.split('/')[0])
-        Np = self.parameters['Np'].value
-        Nsp = self.parameters['Nsp'].value
-        self.parameters['TailleMaille'].value = self.parameters['TailleMaille'].value*K
-        TailleMaille = self.parameters['TailleMaille'].value
-        ALo = self.parameters['ALo'].value*K
-        RRi = self.parameters['RRi'].value*K
-        SRi = self.parameters['SRi'].value*K
-        ALa = self.parameters['ALa'].value*K
+        self.HalbachModel.parameters['Np'].value = float(self.motif.split('/')[0])
+        Np = self.HalbachModel.parameters['Np'].value
+        Nsp = self.HalbachModel.parameters['Nsp'].value
+        self.HalbachModel.parameters['TailleMaille'].value = self.parameters['TailleMaille'].value*K
+        TailleMaille = self.HalbachModel.parameters['TailleMaille'].value
+        ALo = self.HalbachModel.parameters['ALo'].value*K
+        RRi = self.HalbachModel.parameters['RRi'].value*K
+        SRi = self.HalbachModel.parameters['SRi'].value*K
+        ALa = self.HalbachModel.parameters['ALa'].value*K
         
-        self.parameters['e'].value = ALo + 1.2*K
-        e = self.parameters['e'].value
-        self.parameters['RRe'].value = SRi-e
-        RRe = self.parameters['RRe'].value
-        Ne = float(self.motif.split('/')[1])
-        self.parameters['TailleMailleEntrefer'].value = self.parameters['TailleMailleEntrefer'].value*K
-        TailleMailleEntrefer = self.parameters['TailleMailleEntrefer'].value
+        self.HalbachModel.parameters['e'].value = ALo + 1.2*K
+        e = self.HalbachModel.parameters['e'].value
+        self.HalbachModel.parameters['RRe'].value = SRi-e
+        RRe = self.HalbachModel.parameters['RRe'].value
+        Ne = float(self.HalbachModel.motif.split('/')[1])
+        self.HalbachModel.parameters['TailleMailleEntrefer'].value = self.HalbachModel.parameters['TailleMailleEntrefer'].value*K
+        TailleMailleEntrefer = self.HalbachModel.parameters['TailleMailleEntrefer'].value
         
         """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                  Draw Rotor
