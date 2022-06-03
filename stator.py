@@ -1,6 +1,6 @@
 import femm
 from variable import Variable
-from rotor import IPM, SPM, Halbach, IPM_Model
+from rotor import  IPM_Model, IPM_GeomGeneration, SPM_Model, SPM_GeomGeneration, Halbach_Model, Halbach_GeomGeneration
 import numpy as np
 from math import pi, cos, sin, asin, floor, tan, sqrt
 
@@ -39,12 +39,12 @@ class Concentrated:
                  SENomex=SENomex, SRiNomex=SRiNomex, SNShunt=SNShunt, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w):
         
         if rotor_type == 'IPM':
-### (Aurélien) Changement en IPM_Model
+### (Aurélien) Changement en IPM_Model ???
             self.rotor = IPM_Model()
         elif rotor_type == 'SPM':
-            self.rotor = SPM()
+            self.rotor = SPM_Model()
         elif rotor_type == 'Halbach':
-            self.rotor = Halbach()
+            self.rotor = Halbach_Model()
         else: 
             raise TypeError('Unknown rotor type')
 

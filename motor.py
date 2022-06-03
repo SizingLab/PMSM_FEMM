@@ -1,5 +1,5 @@
 from stator import Concentrated
-from rotor import IPM_Model, IPM_GeomGeneration, SPM_Model, SPM_GeomGeneration, Halbach_Model ,Halbach_GeomGenneration
+from rotor import IPM_Model, IPM_GeomGeneration, SPM_Model, SPM_GeomGeneration, Halbach_Model ,Halbach_GeomGeneration
 import numpy as np
 from computation import compute
 
@@ -9,28 +9,35 @@ import pandas as pd
 ### Pour générer un modèle magnétique -> à utiliser dans le main
 
 class PM_motor:
-    
-    def __init__(self, femm_wrapper, rotor_type, stator_type, motif, repetition):
+
+### (Aurélien) Découpage du rotor_type en rotor_model et rotor_geomgeneration pour le draw
+
+    def __init__(self, femm_wrapper, rotor_model, rotor_geomgeneration, stator_type, motif, repetition):
         
         self.motif = motif
         self.repetition = repetition
-        ### Ajout du femm_wrapper en attribut
+        ### (Aurélien) Ajout du femm_wrapper en attribut
 
         self.femm_wrapper = femm_wrapper
 
-#        self.segmentation = segmentation
+#       self.segmentation = segmentation
         
-        if rotor_type == 'IPM':
-            self.rotor = IPM(femm_wrapper=self.femm_wrapper, motif=self.motif, repetition=self.repetition)
-        elif rotor_type == 'SPM':
-            self.rotor = SPM(femm_wrapper=self.femm_wrapper, motif=self.motif, repetition=self.repetition)
-        elif rotor_type == 'Halbach':
-            self.rotor = Halbach(femm_wrapper=self.femm_wrapper, motif=self.motif, repetition=self.repetition)
+        if rotor_model == 'IPM':
+            self.rotor = IPM_Model(motif=self.motif, repetition=self.repetition)
+            self.rotor_geomgeneration = IPM_GeomGeneration(self.rotor, self.femm_wrapper)
+        elif rotor_model == 'SPM':
+            self.rotor = SPM_Model(motif=self.motif, repetition=self.repetition)
+            self.rotor_geomgeneration = SPM_GeomGeneration(self.rotor, self.femm_wrapper)
+        elif rotor_model == 'Halbach':
+            self.rotor = Halbach_Model(motif=self.motif, repetition=self.repetition)
+            self.rotor_geomgeneration = Halbach_GeomGeneration(self.rotor, self.femm_wrapper)
         else: 
             raise TypeError('Unknown rotor type')
-                
+        
+### (Aurélien) Ajout de rotor_model a la place de rotor_type
+
         if stator_type == 'concentrated':
-            self.stator = Concentrated(femm_wrapper=self.femm_wrapper, rotor_type=rotor_type, motif=self.motif, repetition=self.repetition)
+            self.stator = Concentrated(femm_wrapper=self.femm_wrapper, rotor_model=rotor_model, motif=self.motif, repetition=self.repetition)
         else: 
             raise TypeError('Unknown stator type')
 
@@ -51,7 +58,9 @@ class PM_motor:
     def draw(self):
         stator=self.stator
         self.stator.draw_preliminary()
-        self.rotor.draw(stator)
+        
+### (Aurélien) Changement en rotor_geomgeneration
+        self.rotor_geomgeneration.draw(stator)
         self.stator.draw()
         
     def compute(self):

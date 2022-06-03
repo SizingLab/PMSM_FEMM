@@ -5,6 +5,8 @@ import time
 start=time.time()
 import motor
 
+### (Aurélien) Modifier avec le rotor et le stator cf classe motor -> changement du rotor_type ne attribut
+
 def compute(motor):
     # Stator variables
     K = motor.rotor.parameters['K'].value
@@ -31,48 +33,52 @@ def compute(motor):
     SEt = motor.rotor.parameters['SEt'].value*K
     repetition = motor.rotor.repetition
 
+### (Aurélien) Ajout du femm_wrapper
+
+    femm_wrapper = motor.rotor.femm_wrapper
+
     
     """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             PROBLEM LIMIT MODELING (air around the motor) trace_LIMIT_PROBLEM
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
         
-#    femm.mi_addboundprop('Mixed',0,0,0,0,0,0,1/(4*pi*1e-7)/100,0,8)
-    femm.mi_addboundprop('Exterieur',0,0,0,0,0,0,0,0,0)
-    femm.mi_addnode(LRe,0)		
-    femm.mi_addnode(-LRe,0)
-    femm.mi_addarc(LRe,0,-LRe,0,180,2)
-    femm.mi_addarc(-LRe,0,LRe,0,180,2)
-    femm.mi_addblocklabel((LRe+SRe)/2,0)
-    femm.mi_selectlabel((LRe+SRe)/2,0)
-    femm.mi_setblockprop('air',0,2,0,0,8,1)
-    femm.mi_clearselected()
-    femm.mi_selectarcsegment(0,LRe)
-    femm.mi_selectarcsegment(0,-LRe)
-    femm.mi_setarcsegmentprop(1,'Exterieur',1,8)
-    femm.mi_clearselected()
+#    femm_wrapper.addboundprop('Mixed',0,0,0,0,0,0,1/(4*pi*1e-7)/100,0,8)
+    femm_wrapper.addboundprop('Exterieur',0,0,0,0,0,0,0,0,0)
+    femm_wrapper.addnode(LRe,0)		
+    femm_wrapper.addnode(-LRe,0)
+    femm_wrapper.addarc(LRe,0,-LRe,0,180,2)
+    femm_wrapper.addarc(-LRe,0,LRe,0,180,2)
+    femm_wrapper.addblocklabel((LRe+SRe)/2,0)
+    femm_wrapper.selectlabel((LRe+SRe)/2,0)
+    femm_wrapper.setblockprop('air',0,2,0,0,8,1)
+    femm_wrapper.clearselected()
+    femm_wrapper.selectarcsegment(0,LRe)
+    femm_wrapper.selectarcsegment(0,-LRe)
+    femm_wrapper.setarcsegmentprop(1,'Exterieur',1,8)
+    femm_wrapper.clearselected()
     
     """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                     Zoom + saving + troque caluclation
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
     
-    femm.mi_zoomnatural()
-    femm.mi_zoom(-SRe,-SRe,SRe,SRe)
-    femm.mi_saveas('Moteur_BLAC.fem')
-    femm.mi_seteditmode('group')
-    femm.mi_createmesh()
-    femm.mi_zoom(-1.05*SRe,-1.05*SRe,1.05*SRe,1.05*SRe)
-    femm.mi_saveas('Moteur_BLAC.fem')  
-    femm.mi_analyze(0)
-    femm.mi_loadsolution()
-    femm.mo_smooth('on')
-    femm.mo_groupselectblock(1)
-    femm.mo_groupselectblock(3)
-    femm.mo_groupselectblock(9)
-    torque22 = femm.mo_blockintegral(22)
+    femm_wrapper.zoomnatural()
+    femm_wrapper.zoom(-SRe,-SRe,SRe,SRe)
+    femm_wrapper.saveas('Moteur_BLAC.fem')
+    femm_wrapper.seteditmode('group')
+    femm_wrapper.createmesh()
+    femm_wrapper.zoom(-1.05*SRe,-1.05*SRe,1.05*SRe,1.05*SRe)
+    femm_wrapper.saveas('Moteur_BLAC.fem')  
+    femm_wrapper.analyze(0)
+    femm_wrapper.loadsolution()
+    femm_wrapper.smooth('on')
+    femm_wrapper.groupselectblock(1)
+    femm_wrapper.groupselectblock(3)
+    femm_wrapper.groupselectblock(9)
+    torque22 = femm_wrapper.blockintegral(22)
     MatCouple=torque22
     #        print('Torque:',MatCouple)
-    femm.mo_clearblock()
-    femm.mo_clearcontour()
+    femm_wrapper.clearblock()
+    femm_wrapper.clearcontour()
     
     
     """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,13 +90,13 @@ def compute(motor):
     
     """ Calcul des aires de mesure de B """
     
-    femm.mo_groupselectblock(5)
-    S1=femm.mo_blockintegral(5)   # tooth area
-    femm.mo_clearblock()
+    femm_wrapper.groupselectblock(5)
+    S1=femm_wrapper.blockintegral(5)   # tooth area
+    femm_wrapper.clearblock()
     
-    femm.mo_groupselectblock(4)
-    S2=femm.mo_blockintegral(5)   # breech area
-    femm.mo_clearblock()
+    femm_wrapper.groupselectblock(4)
+    S2=femm_wrapper.blockintegral(5)   # breech area
+    femm_wrapper.clearblock()
     
     P1x=0
     P1y=SRi+(SRfe-SRi)/2
@@ -114,15 +120,15 @@ def compute(motor):
         P2yrot=P2x*S+P2y*C 
     
             
-        femm.mi_addnode(P1xrot,P1yrot)
-        femm.mi_addnode(P2xrot,P2yrot)
+        femm_wrapper.addnode(P1xrot,P1yrot)
+        femm_wrapper.addnode(P2xrot,P2yrot)
             
-        femm.mi_selectnode(P1xrot,P1yrot)
-        valeur1=femm.mo_getb(P1xrot,P1yrot)
+        femm_wrapper.selectnode(P1xrot,P1yrot)
+        valeur1=femm_wrapper.getb(P1xrot,P1yrot)
         B1=(valeur1[0]**2+valeur1[1]**2)**.5
             
-        femm.mi_selectnode(P2xrot,P2yrot);
-        valeur2=femm.mo_getb(P2xrot,P2yrot);
+        femm_wrapper.selectnode(P2xrot,P2yrot);
+        valeur2=femm_wrapper.getb(P2xrot,P2yrot);
         B2=(valeur2[0]**2+valeur2[1]**2)**.5
         Bm=max(B1,B2)
         B_max[u]=Bm
@@ -198,12 +204,12 @@ def compute(motor):
                                         Mass Calculation
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
         
-    femm.mo_clearblock()
+    femm_wrapper.clearblock()
     
     """ masse cuivre """
     mv_Cu=8930                                  # Copper density mass [Kg/m3]
-    femm.mo_groupselectblock(7)
-    VCu_active = femm.mo_blockintegral(10)*k_w  # Volume activ part
+    femm_wrapper.groupselectblock(7)
+    VCu_active = femm_wrapper.blockintegral(10)*k_w  # Volume activ part
     VCu_end = BVol_end*1e-9;                    # volume toroid
     if (ACwind == 1):
         VCu = VCu_active + Ne*VCu_end
@@ -212,26 +218,26 @@ def compute(motor):
     
     # MCu(1,Nind)= VCu*mv_Cu                    # Copper Mass
     MCu= VCu*mv_Cu                              # Copper Mass
-    femm.mo_clearblock()
+    femm_wrapper.clearblock()
     
     """ masse ferre """
     mv_Fe=7650;                                 # Iron density mass [Kg/m3]
-    femm.mo_groupselectblock(9)
-    femm.mo_groupselectblock(6)
-    femm.mo_groupselectblock(4)
-    femm.mo_groupselectblock(5)
-    VFe = femm.mo_blockintegral(10)             # Iron volume
+    femm_wrapper.groupselectblock(9)
+    femm_wrapper.groupselectblock(6)
+    femm_wrapper.groupselectblock(4)
+    femm_wrapper.groupselectblock(5)
+    VFe = femm_wrapper.blockintegral(10)             # Iron volume
     # MFe(1,Nind)= VFe*mv_Fe      # masse fer
     MFe= VFe*mv_Fe                              # Iron Mass
-    femm.mo_clearblock()
+    femm_wrapper.clearblock()
     
     """ masse aimants """
     mv_Sm=8300                                  # Magnets density mass [Kg/m3]
-    femm.mo_groupselectblock(3)
-    VSm = femm.mo_blockintegral(10)             # Magnets volume
+    femm_wrapper.groupselectblock(3)
+    VSm = femm_wrapper.blockintegral(10)             # Magnets volume
     #MSm(1,Nind)= VSm*mv_Sm                     # Magnets mass
     MSm= VSm*mv_Sm                              # Magnets mass
-    femm.mo_clearblock()
+    femm_wrapper.clearblock()
     
     """ masse resine """
     mv_Re=1200                 # Resin density mass [Kg/m3]

@@ -957,7 +957,7 @@ class Halbach_Model(BaseRotor):
         self.parameters[TailleMailleJeu.name] = TailleMailleJeu
         self.parameters[TailleMailleBobine.name] = TailleMailleBobine
 
-class Halbach_GeomGenneration(BaseRotor):
+class Halbach_GeomGeneration(BaseRotor):
 
     def __init__(self, HalbachModel, femm_wrapper):
         
