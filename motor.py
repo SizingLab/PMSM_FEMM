@@ -58,7 +58,7 @@ class PM_motor:
     def draw(self):
         stator=self.stator
         self.stator.draw_preliminary()
-        
+
 ### (Aurélien) Changement en rotor_geomgeneration
         self.rotor_geomgeneration.draw(stator)
         self.stator.draw()
@@ -83,6 +83,8 @@ class PM_motor:
         print('Iron Losses:', self.P_fer_femm)
         print('Mass:', self.Mtot)
         print('Computation time:\n', self.computation_time, ' s')
+
+### Modifier la methode pour le rotor_model et rotor_geomgeneration
 
     def __str__(self):
         s = ''

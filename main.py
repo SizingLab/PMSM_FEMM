@@ -1,4 +1,7 @@
 from motor import PM_motor
+### (Aurélien) Enlever les deux imports rotor et stator si pas utiles pour la suite
+from rotor import *
+from stator import *
 
 from femm_wrapper.femm_mag_wrapper import MagneticFEMMWrapper
 from femm_wrapper.femm_thermal_wrapper import ThermalFEMMWrapper
@@ -13,7 +16,7 @@ repetition = 2                  # if =1 all motor, if =2 half motor, if =3 thrid
 motor = PM_motor(MagneticFEMMWrapper, rotor_type, stator_type, motif, repetition)
 
 
-"""if __name__ == '__main__':
+if __name__ == '__main__':
     Motor1 = Motor(r = 0.7, R = 3.5, h = 1 / 0.01, nb_wire = 4)
     wire_base = WireModel()
     

@@ -5,7 +5,7 @@ import time
 start=time.time()
 import motor
 
-### (Aurélien) Modifier avec le rotor et le stator cf classe motor -> changement du rotor_type ne attribut
+### (Aurélien) Modifier avec le rotor et le stator cf classe motor -> changement du rotor_type en attribut
 
 def compute(motor):
     # Stator variables
@@ -33,7 +33,7 @@ def compute(motor):
     SEt = motor.rotor.parameters['SEt'].value*K
     repetition = motor.rotor.repetition
 
-### (Aurélien) Ajout du femm_wrapper
+### (Aurélien) Ajout du femm_wrapper (on peut mettre .rotor ou .stator)
 
     femm_wrapper = motor.rotor.femm_wrapper
 
