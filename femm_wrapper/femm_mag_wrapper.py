@@ -6,13 +6,12 @@ Created on 8 mars 2022
 '''
 
 from femm import doargs, callfemm, mi_addcircprop
-import femm
 import logging
+from .femm_abstract_wrapper import AbstractFEMMWrapper
+
 LOGGER = logging.getLogger()
-from numpy import pi
-from femm_abstract_wrapper import AbstractFEMMWrapper
-    
-    
+
+
 class MagneticFEMMWrapper(AbstractFEMMWrapper):
     MAG_BOUND_NAMES = ["Prescribed_a", "Small_skin_depth", "Mixed", "Strategic_dual_image",
                    "Periodic", "Anti_periodic", "Periodic_air_gap", "Anti_periodic_air_gap"]

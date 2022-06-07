@@ -8,8 +8,8 @@ Created on 8 mars 2022
 from femm import doargs, callfemm, mi_drawarc, mi_drawline, mi_drawrectangle, mi_addcircprop, openfemm, newdocument, mi_addbhpoint, mi_drawarc, hi_drawarc, closefemm, opendocument
 import femm
 import logging
+
 LOGGER = logging.getLogger()
-from numpy import pi
 
 
 class AbstractFEMMWrapper(object):

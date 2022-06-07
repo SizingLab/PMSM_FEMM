@@ -6,11 +6,10 @@ Created on 8 mars 2022
 '''
 
 from femm import doargs, callfemm
-import femm
 import logging
+from .femm_abstract_wrapper import AbstractFEMMWrapper
+
 LOGGER = logging.getLogger()
-from numpy import pi
-from femm_abstract_wrapper import AbstractFEMMWrapper
 
 
 class ThermalFEMMWrapper(AbstractFEMMWrapper):
