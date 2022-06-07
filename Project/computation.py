@@ -3,7 +3,6 @@ from math import pi, cos, sin, sqrt
 import numpy as np
 import time
 start=time.time()
-import motor
 
 ### (Aurélien) Modifier avec le rotor et le stator cf classe motor -> changement du rotor_type en attribut
 
