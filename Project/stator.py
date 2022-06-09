@@ -34,16 +34,16 @@ class Concentrated:
 
 ### (Aurélien) Ajout du femm_wrapper
 
-    def __init__(self, femm_wrapper, rotor_type='IPM', motif='10/12', repetition='1', SEp=SEp, SLd=SLd, Ne=Ne, Ne_ref=Ne_ref, KNe=KNe, NbDemiEncoche=NbDemiEncoche, 
+    def __init__(self, femm_wrapper, rotor_model='IPM', motif='10/12', repetition='1', SEp=SEp, SLd=SLd, Ne=Ne, Ne_ref=Ne_ref, KNe=KNe, NbDemiEncoche=NbDemiEncoche,
                  ACwind=ACwind, SLa=SLa, SLo=SLo, SAngDepEncoche=SAngDepEncoche, SHc=SHc, SHjx=SHjx, SHjy=SHjy, 
                  SENomex=SENomex, SRiNomex=SRiNomex, SNShunt=SNShunt, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w):
         
-        if rotor_type == 'IPM':
+        if rotor_model == 'IPM':
 ### (Aurélien) Changement en IPM_Model ???
             self.rotor = IPM_Model()
-        elif rotor_type == 'SPM':
+        elif rotor_model == 'SPM':
             self.rotor = SPM_Model()
-        elif rotor_type == 'Halbach':
+        elif rotor_model == 'Halbach':
             self.rotor = Halbach_Model()
         else: 
             raise TypeError('Unknown rotor type')
@@ -52,7 +52,7 @@ class Concentrated:
         self.parameters = {}
         self.repetition = repetition
         self.motif = motif
-        self.rotor_type = rotor_type
+        self.rotor_type = rotor_model
         self.parameters[SEp.name] = SEp
         self.parameters[SLd.name] = SLd
         self.parameters[Ne.name] = Ne
