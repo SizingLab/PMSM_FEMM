@@ -496,13 +496,6 @@ class AbstractFEMMWrapper(object):
         """
         self._steered_run("getb", self.POSTPROCES, x, y)
 
-    def addbhpoint(self, blockname, b, h):
-        """
-        Adds a B-H data point the the material specified by the
-        string ’blockname’. The point to be added has a flux density of b in units of Teslas and a field
-        intensity of h in units of Amps/Meter.  
-        """
-        self._steered_run("addbhpoint", self.PREPROCES, blockname, b, h)
 
     def deleteselectedsegments(self):
         """
@@ -516,14 +509,16 @@ class AbstractFEMMWrapper(object):
         """
         self._steered_run("purgemesh", self.PREPROCES)
 
-    def setnodeprop(self, propname, groupno, inconductor):
+    ###def setnodeprop(self, propname, groupno, inconductor):
         """
         Set the selected nodes to have the
         nodal property "propname" and group number groupno. The "inconductor" string specifies
         which conductor the node belongs to. If the node doesn’t belong to a named conductor, this
         parameter can be set to "<None>
         """
-        self._steered_run("setnodeprop", self.PREPROCES, propname, groupno, inconductor)
+        ###self._steered_run("setnodeprop", self.PREPROCES, propname, groupno, inconductor)
+    def setnodeprop(self):
+        raise NotImplementedError()
 
     def copyrotate(self, bx, by, angle, copies):
         """

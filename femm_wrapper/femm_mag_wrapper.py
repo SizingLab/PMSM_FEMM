@@ -180,3 +180,12 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         
     def movetranslate2(self, dx, dy, editaction):
         self._steered_run("movetranslate2", self.PREPROCES, dx, dy, editaction)
+
+    ### Nouvelle fonction à aussi rajouter dans les autres wrapper (pb avec l'abstract)
+
+    def setnodeprop(self, propname, groupno):
+        """
+        Set the selected nodes to have the nodal
+        property "propname" and group number groupno.
+        """
+        self._steered_run("setnodeprop", self.PREPROCES, 'propname', groupno)
