@@ -1,4 +1,5 @@
 import femm
+
 from variable import Variable
 from rotor import  IPM_Model, IPM_GeomGeneration, SPM_Model, SPM_GeomGeneration, Halbach_Model, Halbach_GeomGeneration
 import numpy as np
@@ -372,8 +373,8 @@ class Concentrated:
         
         
         """ CALCUL of the windings surface (Nomex compris : "half_solt.fem" """
-        self.femm_wrapper.openfemm(1)
-        self.femm_wrapper.newdocument(0)						# probléme en magnétique
+        self.femm_wrapper.open_femm(self)
+        self.femm_wrapper.new_document(self)						# probléme en magnétique
         self.femm_wrapper.probdef(0,'millimeters','planar',Precision,SEt,AngleSommetMinMaillage)
          					# Précision between 1e-008 and 1e-016
         					# thickness 110mm to adjust
