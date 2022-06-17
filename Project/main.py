@@ -12,7 +12,7 @@ motif = '10/12'                 # Number of magnet/number of slot  --> '10/12' o
 repetition = 2                  # if =1 all motor, if =2 half motor, if =3 thrid motor etc, exemple: 10/12 with reptition of 2 = 20/24, with reptition of 3 = 30/36
 rotor_geomgeneration = True
 
-motor = PM_motor(MagneticFEMMWrapper, rotor_type, rotor_geomgeneration, stator_type, motif, repetition)
+motor = PM_motor(MagneticFEMMWrapper(), rotor_type, rotor_geomgeneration, stator_type, motif, repetition)
 
 
 if __name__ == '__main__':

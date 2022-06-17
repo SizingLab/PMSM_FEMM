@@ -373,13 +373,15 @@ class Concentrated:
         
         
         """ CALCUL of the windings surface (Nomex compris : "half_solt.fem" """
-        self.femm_wrapper.open_femm
-        self.femm_wrapper.new_document					# probléme en magnétique
-        self.femm_wrapper.probdef(0,'millimeters','planar',Precision,SEt,AngleSommetMinMaillage)
+        self.femm_wrapper.open_femm()
+        self.femm_wrapper.new_document()					# probléme en magnétique
+        self.femm_wrapper.probdef('millimeters', 'planar', SEt, Precision, AngleSommetMinMaillage)
          					# Précision between 1e-008 and 1e-016
         					# thickness 110mm to adjust
         					# Minimum vertex angle of the elements between 1° and 33.8°
-        
+        # /!\ attention à la définition que tu as mise: probdef(self, units, type_pb, depth, precision = 1.e-7, minangle = 30, freq = 0, acsolver = None)!!!!!
+        # de base il prend les termes dans le même ordre...(oublie le self)
+
         """ AIR """
         Mu_x = 1
         Mu_y = 1
