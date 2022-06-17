@@ -373,8 +373,8 @@ class Concentrated:
         
         
         """ CALCUL of the windings surface (Nomex compris : "half_solt.fem" """
-        self.femm_wrapper.open_femm(self)
-        self.femm_wrapper.new_document(self)						# probléme en magnétique
+        self.femm_wrapper.open_femm
+        self.femm_wrapper.new_document					# probléme en magnétique
         self.femm_wrapper.probdef(0,'millimeters','planar',Precision,SEt,AngleSommetMinMaillage)
          					# Précision between 1e-008 and 1e-016
         					# thickness 110mm to adjust
