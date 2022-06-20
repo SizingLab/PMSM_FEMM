@@ -436,7 +436,8 @@ class Concentrated:
         self.femm_wrapper.selectsegment((SUx+SPx)/2,(SUy+SPy)/2)
         self.femm_wrapper.selectsegment((SZx+SMx)/2,(SZy+SMy)/2)
         self.femm_wrapper.selectsegment((SWx+SPx)/2,(SWy+SPy)/2)
-        self.femm_wrapper.setsegmentprop('TOTALE',TailleMailleBobine,1,0,200)			
+        print(TailleMailleBobine)
+        self.femm_wrapper.setsegmentprop(TailleMailleBobine,'TOTALE',1,0,200)
         self.femm_wrapper.clearselected()
         
         self.femm_wrapper.selectarcsegment(SPE1x,SPE1y)
@@ -455,7 +456,8 @@ class Concentrated:
         self.femm_wrapper.analyze(0)
         self.femm_wrapper.loadsolution()
         self.femm_wrapper.smooth('on')
-        self.femm_wrapper.groupselectblock(200)
+        #self.femm_wrapper.groupselectblock(200)
+        self.femm_wrapper.groupselectblock()
         SEdemi_totale = self.femm_wrapper.blockintegral(5)*1e6
         # SE_slot = SEdemi_totale*2
         self.SE_totale= SEdemi_totale*2
@@ -469,8 +471,8 @@ class Concentrated:
         ### (Aurélien) à modifier dans le fichier motor plutot
         
         # New FEMM document
-        self.femm_wrapper.newdocument(0)						# Magnetic problem
-        self.femm_wrapper.probdef(0,'millimeters','planar',Precision,SEt,AngleSommetMinMaillage)
+        self.femm_wrapper.new_document()						# Magnetic problem
+        self.femm_wrapper.probdef('millimeters','planar',SEt ,Precision,AngleSommetMinMaillage)
  					# Précision between 1e-008 and 1e-016
         from materials import Material
         k_w = self.parameters['k_w'].value

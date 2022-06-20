@@ -975,10 +975,10 @@ class Halbach_GeomGeneration(BaseRotor):
 
         K = self.HalbachModel.parameters['K'].value
         
-        self.HalbachModel.parameters['Np'].value = float(self.motif.split('/')[0])
+        self.HalbachModel.parameters['Np'].value = float(self.HalbachModel.motif.split('/')[0])
         Np = self.HalbachModel.parameters['Np'].value
         Nsp = self.HalbachModel.parameters['Nsp'].value
-        self.HalbachModel.parameters['TailleMaille'].value = self.parameters['TailleMaille'].value*K
+        self.HalbachModel.parameters['TailleMaille'].value = self.HalbachModel.parameters['TailleMaille'].value*K
         TailleMaille = self.HalbachModel.parameters['TailleMaille'].value
         ALo = self.HalbachModel.parameters['ALo'].value*K
         RRi = self.HalbachModel.parameters['RRi'].value*K
@@ -1084,7 +1084,8 @@ class Halbach_GeomGeneration(BaseRotor):
             
             self.femm_wrapper.selectsegment((RGxrot+RHxrot)/2,(RGyrot+RHyrot)/2)
             self.femm_wrapper.selectsegment((RIxrot+RJxrot)/2,(RIyrot+RJyrot)/2)
-            self.femm_wrapper.setsegmentprop('aimant',TailleMaille,1,0,3)
+### (Aurélien) 
+            self.femm_wrapper.setsegmentprop(TailleMaille, 'aimant',1,0,3)
             self.femm_wrapper.clearselected()
             
             self.femm_wrapper.selectarcsegment (RHxrot,RHyrot)
