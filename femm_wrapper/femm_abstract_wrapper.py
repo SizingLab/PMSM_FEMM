@@ -529,6 +529,11 @@ class AbstractFEMMWrapper(object):
         """
         self._steered_run("copyrotate", self.PREPROCES, bx, by, angle, copies)
 
+    def deleteselected(self):
+        """
+         Delete all selected objects.
+        """
+        self._steered_run("deleteselected", self.PREPROCES)
 
 class TypeProblemError(Exception):
 

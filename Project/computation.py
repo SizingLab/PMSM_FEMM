@@ -34,7 +34,7 @@ def compute(motor):
 
 ### (Aurélien) Ajout du femm_wrapper (on peut mettre .rotor ou .stator)
 
-    femm_wrapper = motor.rotor.femm_wrapper
+    femm_wrapper = motor.rotor_geomgeneration.femm_wrapper
 
     
     """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

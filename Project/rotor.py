@@ -1084,7 +1084,9 @@ class Halbach_GeomGeneration(BaseRotor):
             
             self.femm_wrapper.selectsegment((RGxrot+RHxrot)/2,(RGyrot+RHyrot)/2)
             self.femm_wrapper.selectsegment((RIxrot+RJxrot)/2,(RIyrot+RJyrot)/2)
-### (Aurélien) 
+
+### (Aurélien) Changement de place entre appel TailleMaille et 'aimant'
+
             self.femm_wrapper.setsegmentprop(TailleMaille, 'aimant',1,0,3)
             self.femm_wrapper.clearselected()
             
