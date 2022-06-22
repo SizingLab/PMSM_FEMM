@@ -229,16 +229,16 @@ class AbstractFEMMWrapper(object):
         """Clear all selected nodes, blocks, segments and arc segments"""
         self._steered_run("clearselected", self.PREPROCES)
 
-    def zoomnatural(self, process_phase):
+    def zoomnatural(self):
         '''zooms to a “natural” view with sensible extents.'''
-        self._steered_run("zoomnatural", process_phase)
+        self._steered_run("zoomnatural", self.PREPROCES)
 
-    def zoom(self, x1, y1, x2, y2, process_phase):
+    def zoom(self, x1, y1, x2, y2):
         """
         Set the display area to be from the bottom left corner specified
         by (x1,y1) to the top right corner specified by (x2,y2).
         """
-        self._steered_run("zoom", process_phase, x1, y1, x2, y2)
+        self._steered_run("zoom", self.PREPROCES, x1, y1, x2, y2)
 
     def deleteselectedarcsegments(self):
         '''Delete selects arcs'''
@@ -389,12 +389,12 @@ class AbstractFEMMWrapper(object):
     def addconductorprop(self):
         raise NotImplementedError()
 
-    def seteditmode(self, mode, pb_type, process_phase=POSTPROCES):
+    def seteditmode(self, mode, pb_type):
         """
         Sets the mode of the postprocessor to point, contour, or area mode.
         Valid entries for mode are "point", "contour", and "area".
         """
-        self._steered_run("seteditmode", process_phase, mode)
+        self._steered_run("seteditmode", self.PREPROCES, mode)
 
     def addcontour(self, x, y):
         """

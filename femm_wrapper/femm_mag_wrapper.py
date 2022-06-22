@@ -118,7 +118,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         For an “Anti-periodic Air Gap”,the same ia and oa parameters also apply here.”
         '''            
         self._steered_run("addboundprop", self.PREPROCES, Bound_name, A0, A1, A2, Phi, Mu, Sig, C0,
-            C1, self.MAG_BOUND_NAMES.index(BdryFormat), Ia, Oa)
+                          C1, self.MAG_BOUND_NAMES.index(BdryFormat), Ia, Oa)
                        
     def setblockprop(self, blockname, automesh, meshsize, group = 0, incircuit = '<None>', magdir = 0, turns = 0):
         '''Set the selected block labels to have the properties: Block property ’blockname’.
