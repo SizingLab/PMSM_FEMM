@@ -389,7 +389,7 @@ class AbstractFEMMWrapper(object):
     def addconductorprop(self):
         raise NotImplementedError()
 
-    def seteditmode(self, mode, pb_type):
+    def seteditmode(self, mode):
         """
         Sets the mode of the postprocessor to point, contour, or area mode.
         Valid entries for mode are "point", "contour", and "area".
