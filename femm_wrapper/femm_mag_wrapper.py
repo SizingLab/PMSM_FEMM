@@ -120,7 +120,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         self._steered_run("addboundprop", self.PREPROCES, Bound_name, A0, A1, A2, Phi, Mu, Sig, C0,
                           C1, self.MAG_BOUND_NAMES.index(BdryFormat), Ia, Oa)
                        
-    def setblockprop(self, blockname, automesh, meshsize, group = 0, incircuit = '<None>', magdir = 0, turns = 0):
+    def setblockprop(self, blockname, automesh, meshsize, incircuit, magdir, group, turns):
         '''Set the selected block labels to have the properties: Block property ’blockname’.
         automesh: 0 = mesher defers to mesh size constraint defined in meshsize, 1 = mesher automatically chooses the mesh density.
         meshsize: size constraint on the mesh in the block marked by this label. A member of group number group
@@ -130,7 +130,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         '''
         self._steered_run("setblockprop", self.PREPROCES, blockname, automesh, meshsize, incircuit, magdir, group, turns)
     
-    def setarcsegmentprop(self, maxsegdeg, propname, hide = False, group = 0):
+    def setarcsegmentprop(self, maxsegdeg, propname, group, hide = False):
         '''
         Set the selected arc segments to:
         Meshed with elements that span at most maxsegdeg degrees per element Boundary property "propname"
@@ -143,7 +143,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
             hide_index = 0
         self._steered_run("setarcsegmentprop", self.PREPROCES, maxsegdeg, propname, hide_index, group)
     
-    def setsegmentprop(self, elementsize, propname, hide = False, group = 0, automesh = 0):
+    def setsegmentprop(self, elementsize, propname, group, hide = False, automesh = 1):
         '''
         Set the selected arc segments to:
         Meshed with elements that span at most maxsegdeg degrees per element Boundary property "propname"
@@ -189,3 +189,11 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         property "propname" and group number groupno.
         """
         self._steered_run("setnodeprop", self.PREPROCES, 'propname', groupno)
+
+    def getb(self, x, y):
+        """
+        Get the magnetic flux density associated with the point at (x,y). The return
+        value is a list with two elements representing Bx and By for planar problems and Br and Bz for
+        axisymmetric problems.
+        """
+        self._steered_run("getb", self.POSTPROCES, x, y)

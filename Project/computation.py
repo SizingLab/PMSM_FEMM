@@ -124,6 +124,8 @@ def compute(motor):
             
         femm_wrapper.selectnode(P1xrot,P1yrot)
         valeur1=femm_wrapper.getb(P1xrot,P1yrot)
+        print(P1xrot, P1yrot)
+        print(valeur1)
         B1=(valeur1[0]**2+valeur1[1]**2)**.5
             
         femm_wrapper.selectnode(P2xrot,P2yrot);

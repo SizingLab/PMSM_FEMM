@@ -486,15 +486,7 @@ class AbstractFEMMWrapper(object):
         """
         Clear a prevously defined contour
         """
-        self._steered_run("clearcontour", self.PREPROCES)
-
-    def getb(self, x, y):
-        """
-        Get the magnetic flux density associated with the point at (x,y). The return
-        value is a list with two elements representing Bx and By for planar problems and Br and Bz for
-        axisymmetric problems.
-        """
-        self._steered_run("getb", self.POSTPROCES, x, y)
+        self._steered_run("clearcontour", self.POSTPROCES)
 
 
     def deleteselectedsegments(self):
@@ -509,14 +501,6 @@ class AbstractFEMMWrapper(object):
         """
         self._steered_run("purgemesh", self.PREPROCES)
 
-    ###def setnodeprop(self, propname, groupno, inconductor):
-        """
-        Set the selected nodes to have the
-        nodal property "propname" and group number groupno. The "inconductor" string specifies
-        which conductor the node belongs to. If the node doesn’t belong to a named conductor, this
-        parameter can be set to "<None>
-        """
-        ###self._steered_run("setnodeprop", self.PREPROCES, propname, groupno, inconductor)
     def setnodeprop(self):
         raise NotImplementedError()
 

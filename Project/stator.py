@@ -436,14 +436,13 @@ class Concentrated:
         self.femm_wrapper.selectsegment((SUx+SPx)/2,(SUy+SPy)/2)
         self.femm_wrapper.selectsegment((SZx+SMx)/2,(SZy+SMy)/2)
         self.femm_wrapper.selectsegment((SWx+SPx)/2,(SWy+SPy)/2)
-        print(TailleMailleBobine)
-        self.femm_wrapper.setsegmentprop(TailleMailleBobine,'TOTALE',1,0,200)
+        self.femm_wrapper.setsegmentprop(TailleMailleBobine,'TOTALE',200)
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.selectarcsegment(SPE1x,SPE1y)
         self.femm_wrapper.selectarcsegment(SE1E2x,SE1E2y)
         self.femm_wrapper.selectarcsegment(SF1F2x,SF1F2y)
-        self.femm_wrapper.setarcsegmentprop(MaxSegDegOG,'TOTALE',0,200)
+        self.femm_wrapper.setarcsegmentprop(MaxSegDegOG,'TOTALE',200,0)
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.addblocklabel((SPx+SF2x)/2,(SPy+SF2y)/2);
@@ -457,7 +456,7 @@ class Concentrated:
         self.femm_wrapper.loadsolution()
         self.femm_wrapper.smooth('on')
         #self.femm_wrapper.groupselectblock(200)
-        self.femm_wrapper.groupselectblock()
+        self.femm_wrapper.groupselectblock(200)
         SEdemi_totale = self.femm_wrapper.blockintegral(5)*1e6
         # SE_slot = SEdemi_totale*2
         self.SE_totale= SEdemi_totale*2
@@ -1183,7 +1182,7 @@ class Concentrated:
 
             ### Add of the editmode parameter to denote nodes
 
-            self.femm_wrapper.selectrectangle(ALa/repetition, SRe, RRe+TailleMaille, 0, 0)
+            self.femm_wrapper.selectrectangle(ALa/repetition, SRe, RRe+TailleMaille, 0, 4)
 
             self.femm_wrapper.selectnode(SIxrot,SIyrot)
             self.femm_wrapper.selectnode(SNxrot,SNyrot)
