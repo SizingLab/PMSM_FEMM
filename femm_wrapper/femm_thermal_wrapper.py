@@ -72,3 +72,40 @@ class ThermalFEMMWrapper(AbstractFEMMWrapper):
         super(ThermalFEMMWrapper, self).__init__(upper_B, lower_B, type_plot, legend, grey_scale)
         args = [self.legend_index, self.gscale, self.DENSITY_PLOT_TH.index(type), upper_B, lower_B]
         self._steered_run("showdensityplot", self.POSTPROCES, *args)
+
+
+    def setnodeprop(self, propname, groupno, inconductor="<None>"):
+
+        """
+        Set the selected nodes to have
+        the nodal property "propname" and group number groupno. The "inconductor" string
+        specifies which conductor the node belongs to. If the node doesn’t belong to a named
+        conductor, this parameter can be set to "<None>".
+        """
+
+        self._steered_run("setnodeprop", self.PREPROCES, propname, groupno, inconductor)
+
+
+    def setsegmentprop(self, elementsize, propname, group, inconductor="<None>", hide=False, automesh=1):
+        '''
+        Set the selected arc segments to:
+        Meshed with elements that span at most maxsegdeg degrees per element Boundary property "propname"
+        hide: False = not hidden in post-processor, True == hidden in post processor
+        A member of group number group
+        '''
+        if hide:
+            hide_index = 1
+        else:
+            hide_index = 0
+        self._steered_run("setsegmentprop", self.PREPROCES, propname, elementsize, automesh, hide_index, group,
+                          inconductor)
+
+    def setblockprop(self, blockname, automesh, meshsize, group):
+        """
+        Set the selected block labels to have
+        the properties: Block property "blockname".
+        automesh: 0 = mesher defers to mesh size constraint defined in meshsize, 1 = mesher
+        automatically chooses the mesh density. meshsize: size constraint on the mesh in the
+        block marked by this label. A member of group number group
+        """
+        self._steered_run("setblockprop", self.PREPROCES, blockname, automesh, meshsize, group)

@@ -162,8 +162,6 @@ class IPM_GeomGeneration(BaseRotor):
         
         return self.IPMModel.parameters[name].value
 
-    """if __name__ == '__main__':
-        print(SRe)"""
     
     def variable_calcul(self,SRe,J_den):
         return self.IPMModel.SRe.value, self.IPMModel.J_den.value
@@ -654,8 +652,6 @@ class SPM_Model(BaseRotor):
     TailleMailleBobine= Variable('TailleMailleBobine', 1, '[-]', 'Mesh size for the winding')
 
 
-### (Aurélien) On enlève le femm_wrapper du init de base
-
     def __init__(self, motif='10/12', repetition='1', Np=Np, SDe=SDe, SRe=SRe, SRe_ref=SRe_ref, K=K, ALo=ALo, RRi=RRi, SRi=SRi, J_den=J_den, SEt=SEt, ALa=ALa, 
                  e=e, RRe=RRe, Nsp=Nsp, TailleMailleEntrefer=TailleMailleEntrefer, TailleMaille=TailleMaille, 
                  TailleMailleJeu=TailleMailleJeu, TailleMailleBobine=TailleMailleBobine):
@@ -692,12 +688,6 @@ class SPM_GeomGeneration(BaseRotor):
 
     def get_value(self,name):
         return self.SPMModel.parameters[name].value
-
-    
-    
-    """if __name__ == '__main__':
-
-    print(SPM.get_value('name'))"""
         
     def draw(self, stator):        
         
@@ -1084,8 +1074,6 @@ class Halbach_GeomGeneration(BaseRotor):
             
             self.femm_wrapper.selectsegment((RGxrot+RHxrot)/2,(RGyrot+RHyrot)/2)
             self.femm_wrapper.selectsegment((RIxrot+RJxrot)/2,(RIyrot+RJyrot)/2)
-
-### (Aurélien) Changement de place entre appel TailleMaille et 'aimant'
 
             self.femm_wrapper.setsegmentprop(TailleMaille, 'aimant',1,0,3)
             self.femm_wrapper.clearselected()

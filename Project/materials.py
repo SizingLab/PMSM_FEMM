@@ -12,12 +12,13 @@ import femm
 from math import pi, cos, sqrt
 import numpy as np
 
-
 """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 								Material definition
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
 
-class Material: 
+
+
+class Material_Mag:
 	def __init__(self, name, Mu_x, Mu_y, H_c, J, Cduct, Lam_d, Phi_max, Lam_fill, Lam_type, Phi_hx, Phi_hy, Nstrands, WireD):
 		
 		self.Mu_x = Mu_x
@@ -44,17 +45,15 @@ class Material:
 		FlagToleranceAimant=2               # =1 mini		=2 nominal		=3 maxi
 		
 		" Air "
-		air = Material('air', 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, None, None)
+		air = Material_Mag('air', 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, None, None)
 		femm.mi_addmaterial('air', air.Mu_x, air.Mu_y , air.H_c, air.J, air.Cduct, air.Lam_d, air.Phi_max, air.Lam_fill, air.Lam_type, air.Phi_hx, air.Phi_hy)
 		
-		
 		" NOMEX "
-		Nomex = Material('Nomex', 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, None, None)
+		Nomex = Material_Mag('Nomex', 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, None, None)
 		femm.mi_addmaterial('Nomex', Nomex.Mu_x, Nomex.Mu_y , Nomex.H_c, Nomex.J, Nomex.Cduct, Nomex.Lam_d, Nomex.Phi_max, Nomex.Lam_fill, Nomex.Lam_type, Nomex.Phi_hx, Nomex.Phi_hy);
-		
-			
+
 		" COPPER WIRE "
-		copper = Material('copper', 1, 1, 0, 0, 58, 0, 0, 1, 0, 0, 0, 0, 1)
+		copper = Material_Mag('copper', 1, 1, 0, 0, 58, 0, 0, 1, 0, 0, 0, 0, 1)
 		femm.mi_addmaterial('copper', copper.Mu_x, copper.Mu_y , copper.H_c, copper.J, copper.Cduct, copper.Lam_d, copper.Phi_max, copper.Lam_fill, copper.Lam_type, copper.Phi_hx, copper.Phi_hy, copper.Nstrands, copper.WireD);		
 			
 		# Cduct = 58 : conductance du cuivre  ;  =0 : résistance du bobinage non pris en compte, à rajouter aprés)
@@ -83,7 +82,7 @@ class Material:
 			
 		
 		""" MATERIAL SHEETS : MAAMAR """
-		Maamar_tole = Material('FeSi M19 3%', 1000, 1000, 0, 0, 1/249.3e-9/1e6, 0.35, 0, SRatioLongueurActive, 0, 0, 0, None, None)
+		Maamar_tole = Material_Mag('FeSi M19 3%', 1000, 1000, 0, 0, 1/249.3e-9/1e6, 0.35, 0, SRatioLongueurActive, 0, 0, 0, None, None)
 		
 		# Cduct = 1/249.3e-9/1e6 (= 1/Resistivity) en Mega Siemens/metre
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -97,7 +96,7 @@ class Material:
 		
 			
 		""" MATERIAL SHEETS : ECEPS FeSi """
-		ECEPS_tole = Material('FeSi 0.35mm', 1000, 1000, 0, 0, 1/249.3e-9/1e6, 0.35, 0, SRatioLongueurActive, 0, 0, 0, None, None)
+		ECEPS_tole = Material_Mag('FeSi 0.35mm', 1000, 1000, 0, 0, 1/249.3e-9/1e6, 0.35, 0, SRatioLongueurActive, 0, 0, 0, None, None)
 		femm.mi_addmaterial('FeSi 0.35mm', ECEPS_tole.Mu_x, ECEPS_tole.Mu_y , ECEPS_tole.H_c, ECEPS_tole.J, ECEPS_tole.Cduct, ECEPS_tole.Lam_d, ECEPS_tole.Phi_max, ECEPS_tole.Lam_fill, ECEPS_tole.Lam_type, ECEPS_tole.Phi_hx, ECEPS_tole.Phi_hy);	
 		Htole=np.array([0,24,36,44,54,62,70,81,94,112,134,165,210,290,460,980,2660,5700,10700,18400,30000,45000,70000,120000,200000,280000])
 		Btole=np.array([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2,2.3,2.4,2.5])
@@ -107,7 +106,7 @@ class Material:
 		
 			
 		""" MATERIAL SUPPORT D'AIMANTS : MAAMAR """
-		Maamar_aimant = Material('Losil 800/65', 2000, 2000, 0, 0, 1.67, 0, 0, 1, 0, 0, 0, None, None)
+		Maamar_aimant = Material_Mag('Losil 800/65', 2000, 2000, 0, 0, 1.67, 0, 0, 1, 0, 0, 0, None, None)
 		
 		# Cduct = 1.67 (=1.67 : Losil 800/65)
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -120,7 +119,7 @@ class Material:
 		
 			
 		""" MATERIAL MAGNETS HOLDER : ECEPS """
-		ECEPS_aimant = Material('Matiere_ROTOR', 2000, 2000, 0, 0, 1/130.3e-9/1e6, 0, 0, 1, 0, 0, 0, None, None)
+		ECEPS_aimant = Material_Mag('Matiere_ROTOR', 2000, 2000, 0, 0, 1/130.3e-9/1e6, 0, 0, 1, 0, 0, 0, None, None)
 		
 		# Cduct = 1/130e-9/1e6 (= 1/Resistivity) en Mega Siemens/metre
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -154,7 +153,7 @@ class Material:
 		Cduct=1/((.75e6+.9e6)/2)/1e6
 		
 		if (FlagBHpointAimant == 0):
-			RECOMA_aimant = Material('Sm2Co17', Mur, Mur, Hcb, 0, 1/((.75e6+.9e6)/2)/1e6, 0, 0, 1, 0, 0, 0, None, None)
+			RECOMA_aimant = Material_Mag('Sm2Co17', Mur, Mur, Hcb, 0, 1/((.75e6+.9e6)/2)/1e6, 0, 0, 1, 0, 0, 0, None, None)
 			# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
 			femm.mi_addmaterial('Sm2Co17', RECOMA_aimant.Mu_x, RECOMA_aimant.Mu_y , RECOMA_aimant.H_c, RECOMA_aimant.J, RECOMA_aimant.Cduct, RECOMA_aimant.Lam_d, RECOMA_aimant.Phi_max, RECOMA_aimant.Lam_fill, RECOMA_aimant.Lam_type, RECOMA_aimant.Phi_hx, RECOMA_aimant.Phi_hy)	
 		else:
@@ -167,7 +166,7 @@ class Material:
 				HSmCo.append(HAim[ii]*1e6)
 				if (BSmCo[1]<0):
 					BSmCo[1]=0
-			RECOMA_28_aimant = Material('Sm2Co17 Recoma 28', Mur, Mur, HSmCo[9], 0, 1/((.75e6+.9e6)/2)/1e6, 0, 0, 1, 0, 0, 0, None, None)
+			RECOMA_28_aimant = Material_Mag('Sm2Co17 Recoma 28', Mur, Mur, HSmCo[9], 0, 1/((.75e6+.9e6)/2)/1e6, 0, 0, 1, 0, 0, 0, None, None)
 			# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
 			femm.mi_addmaterial('Sm2Co17 Recoma 28', RECOMA_28_aimant.Mu_x, RECOMA_28_aimant.Mu_y , RECOMA_28_aimant.H_c, RECOMA_28_aimant.J, RECOMA_28_aimant.Cduct, RECOMA_28_aimant.Lam_d, RECOMA_28_aimant.Phi_max, RECOMA_28_aimant.Lam_fill, RECOMA_28_aimant.Lam_type, RECOMA_28_aimant.Phi_hx, RECOMA_28_aimant.Phi_hy)	
 			for ii in range (BSmCo.size):
@@ -175,7 +174,7 @@ class Material:
 		
 		
 		""" SHEETS MATERIAL """
-		tole = Material('FeSi M19 3% SHUNT', 1000, 1000, 0, 0, 1/249.3e-9/1e6, 0.35, 0, SNShunt*SRatioLongueurActive, 0, 0, 0, None, None)
+		tole = Material_Mag('FeSi M19 3% SHUNT', 1000, 1000, 0, 0, 1/249.3e-9/1e6, 0.35, 0, SNShunt*SRatioLongueurActive, 0, 0, 0, None, None)
 		
 		# Cduct = 1/249.3e-9/1e6 (= 1/Resistivity) en Mega Siemens/metre
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -188,7 +187,7 @@ class Material:
 		
 		
 		""" MATERIAL ROTOR INSIDER TUBE  : CX13VDW measured by CEDRAT """
-		CX13VDW_tube_int_rot = Material('CX13VDW', 2000, 2000, 0, 0, 1/77e-8/1e6, 0, 0, 1, 0, 0, 0, None, None)
+		CX13VDW_tube_int_rot = Material_Mag('CX13VDW', 2000, 2000, 0, 0, 1/77e-8/1e6, 0, 0, 1, 0, 0, 0, None, None)
 		
 		# Cduct = 1/77e-8/1e-6 (= 1/Resistivity) en Mega Siemens/metre
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -201,7 +200,7 @@ class Material:
 			
 			
 		"""" MATERIAL ROTOR INSIDER TUBE : XD15NW measured by CEDRAT """
-		XD15NW_tube_int_rot = Material('CX13VDW', 2000, 2000, 0, 0, 1/77e-8/1e6, 0, 0, 1, 0, 0, 0, None, None)
+		XD15NW_tube_int_rot = Material_Mag('CX13VDW', 2000, 2000, 0, 0, 1/77e-8/1e6, 0, 0, 1, 0, 0, 0, None, None)
 		
 		# Cduct = 1/77e-8/1e6 (= 1/Resistivity) en Mega Siemens/metre
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -214,7 +213,7 @@ class Material:
 			
 			
 		""" MATERIAL ROTOR INSIDER TUBE : BS-S98, ECEPS data"""
-		BS_S98_tube_int_rot = Material('CX13VDW', 2000, 2000, 0, 0, 1/77e-8/1e6, 0, 0, 1, 0, 0, 0, None, None)
+		BS_S98_tube_int_rot = Material_Mag('CX13VDW', 2000, 2000, 0, 0, 1/77e-8/1e6, 0, 0, 1, 0, 0, 0, None, None)
 		
 		# Cduct = 1/77e-8/1e6 (= 1/Resistivity) en Mega Siemens/metre
 		# Lam_type = 0 :laminated in plane ; 3 : magnet wire)
@@ -224,3 +223,8 @@ class Material:
 		BBSS98=np.array([0,0.013,0.03,0.05,0.08,0.17,0.35,0.8,1.185,1.59,1.66,1.72,1.805,1.835,1.84,1.845,1.945,2.045,2.145,2.245,2.345,2.445])	
 		for ii in range (BBSS98.size):
 				femm.mi_addbhpoint('BS-S98',BBSS98[ii],HBSS98[ii])
+
+###class Material_Th:
+	###def __init__(self,...
+
+	###def add_materials(

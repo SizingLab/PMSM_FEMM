@@ -1,7 +1,8 @@
 import femm
-
+from femm_wrapper.femm_mag_wrapper import MagneticFEMMWrapper
+from femm_wrapper.femm_thermal_wrapper import ThermalFEMMWrapper
 from variable import Variable
-from rotor import  IPM_Model, IPM_GeomGeneration, SPM_Model, SPM_GeomGeneration, Halbach_Model, Halbach_GeomGeneration
+from rotor import  IPM_Model, SPM_Model, Halbach_Model
 import numpy as np
 from math import pi, cos, sin, asin, floor, tan, sqrt
 
@@ -40,7 +41,6 @@ class Concentrated:
                  SENomex=SENomex, SRiNomex=SRiNomex, SNShunt=SNShunt, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w):
 
         if rotor_model == 'IPM':
-### (Aurélien) Changement en IPM_Model ???
             self.rotor = IPM_Model()
         elif rotor_model == 'SPM':
             self.rotor = SPM_Model()
@@ -382,7 +382,7 @@ class Concentrated:
         # /!\ attention à la définition que tu as mise: probdef(self, units, type_pb, depth, precision = 1.e-7, minangle = 30, freq = 0, acsolver = None)!!!!!
         # de base il prend les termes dans le même ordre...(oublie le self)
 
-        """ AIR """
+        """ AIR (Magnetic Properties) """
         Mu_x = 1
         Mu_y = 1
         H_c = 0
@@ -394,7 +394,17 @@ class Concentrated:
         Lam_type = 0 		# (0 :laminated in plane ; 3 : magnet wire)
         Phi_hx = 0
         Phi_hy =0
-        self.femm_wrapper.addmaterial('air',Mu_x,Mu_y ,H_c,J,Cduct,Lam_d,Phi_max,Lam_fill,Lam_type,Phi_hx,Phi_hy)
+
+        """ AIR (Thermal Properties) """
+        kx = 0.025  ### Thermal conductivity in the x- or r-direction
+        ky = 0.025  ### Thermal conductivity in the y- or z-direction
+        qv = 0      ### Volume heat generation density in units of W/m3
+        kt = 0      ### Volumetric heat capacity in units of MJ/(m3*K)
+
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.addmaterial('air',Mu_x,Mu_y ,H_c,J,Cduct,Lam_d,Phi_max,Lam_fill,Lam_type,Phi_hx,Phi_hy)
+        else:
+            self.femm_wrapper.addmaterial('air', kx, ky, qv, kt)
 
         """ Surface building """
         self.femm_wrapper.addnode(SPx,SPy)
@@ -427,7 +437,11 @@ class Concentrated:
         self.femm_wrapper.selectnode(SUx,SUy)
         self.femm_wrapper.selectnode(SZx,SZy)
         self.femm_wrapper.selectnode(SWx,SWy)
-        self.femm_wrapper.setnodeprop('TOTALE',200)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setnodeprop('TOTALE',200)
+        else:
+            self.femm_wrapper.setnodeprop('TOTALE',200)
+
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.selectsegment((SE2x+SF1x)/2,(SE2y+SF1y)/2)
@@ -436,7 +450,12 @@ class Concentrated:
         self.femm_wrapper.selectsegment((SUx+SPx)/2,(SUy+SPy)/2)
         self.femm_wrapper.selectsegment((SZx+SMx)/2,(SZy+SMy)/2)
         self.femm_wrapper.selectsegment((SWx+SPx)/2,(SWy+SPy)/2)
-        self.femm_wrapper.setsegmentprop(TailleMailleBobine,'TOTALE',200)
+
+        if isinstance(self.femm_wrapper , MagneticFEMMWrapper):
+            self.femm_wrapper.setsegmentprop(TailleMailleBobine,'TOTALE',200)
+        else:
+            self.femm_wrapper.setsegmentprop(TailleMailleBobine,'TOTALE',200)
+
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.selectarcsegment(SPE1x,SPE1y)
@@ -447,7 +466,10 @@ class Concentrated:
 
         self.femm_wrapper.addblocklabel((SPx+SF2x)/2,(SPy+SF2y)/2);
         self.femm_wrapper.selectlabel((SPx+SF2x)/2,(SPy+SF2y)/2);
-        self.femm_wrapper.setblockprop('air',0,TailleMailleEntrefer,0,0,200,1);
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setblockprop('air',0,TailleMailleEntrefer,0,0,200,1)
+        else:
+            self.femm_wrapper.setblockprop('air', 0, TailleMailleEntrefer,200)
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.zoomnatural
@@ -455,9 +477,15 @@ class Concentrated:
         self.femm_wrapper.analyze(0)
         self.femm_wrapper.loadsolution()
         self.femm_wrapper.smooth('on')
-        #self.femm_wrapper.groupselectblock(200)
         self.femm_wrapper.groupselectblock(200)
-        SEdemi_totale = self.femm_wrapper.blockintegral(5)*1e6
+
+        if self.femm_wrapper == MagneticFEMMWrapper():
+            SEdemi_totale = self.femm_wrapper.blockintegral(5)*1e6
+            print(SEdemi_totale)
+        else:
+            SEdemi_totale = self.femm_wrapper.blockintegral(1)
+            print(SEdemi_totale)
+
         # SE_slot = SEdemi_totale*2
         self.SE_totale= SEdemi_totale*2
         if (NbDemiEncoche==0):
@@ -467,15 +495,16 @@ class Concentrated:
 
         self.femm_wrapper.purgemesh
 
-        ### (Aurélien) à modifier dans le fichier motor plutot
 
         # New FEMM document
         self.femm_wrapper.new_document()						# Magnetic problem
         self.femm_wrapper.probdef('millimeters','planar',SEt ,Precision,AngleSommetMinMaillage)
  					# Précision between 1e-008 and 1e-016
-        from materials import Material
+        from materials import Material_Mag
+        ###from materials import Material_Th
         k_w = self.parameters['k_w'].value
-        Material.add_materials(J_den=J_den, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w, TempAimant=TempAimant, SNShunt=SNShunt)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+        Material_Mag.add_materials(J_den=J_den, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w, TempAimant=TempAimant, SNShunt=SNShunt)
 
 
     def draw(self):

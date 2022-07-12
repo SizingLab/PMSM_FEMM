@@ -5,9 +5,6 @@ from computation import compute
 
 import pandas as pd
 
-### (Aurélien) Rajouter une focntion execute_model pour le openfemm etc...
-### Pour générer un modèle magnétique -> à utiliser dans le main
-
 class PM_motor:
 
 ### (Aurélien) Découpage du rotor_type en rotor_model et rotor_geomgeneration pour le draw
@@ -83,8 +80,6 @@ class PM_motor:
         print('Iron Losses:', self.P_fer_femm)
         print('Mass:', self.Mtot)
         print('Computation time:\n', self.computation_time, ' s')
-
-### Modifier la methode pour le rotor_model et rotor_geomgeneration
 
     def __str__(self):
         s = ''

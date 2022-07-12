@@ -14,13 +14,13 @@ LOGGER = logging.getLogger()
 
 class MagneticFEMMWrapper(AbstractFEMMWrapper):
     MAG_BOUND_NAMES = ["Prescribed_a", "Small_skin_depth", "Mixed", "Strategic_dual_image",
-                   "Periodic", "Anti_periodic", "Periodic_air_gap", "Anti_periodic_air_gap"]
+                       "Periodic", "Anti_periodic", "Periodic_air_gap", "Anti_periodic_air_gap"]
     DENSITY_PLOT_MAG = ["mag", "real", "imag", "jreal", "jmag"]
     MAG_BOUND_KEYS = ["Bound_name", "A0", "A1", "A2", "Phi", "Mu", "Sig", "C0", "C1",
-                  "BdryFormat", "Ia", "Oa"]
+                      "BdryFormat", "Ia", "Oa"]
     MAG_BOUND_NAMES = ["Prescribed_a", "Small_skin_depth", "Mixed", "Strategic_dual_image",
-                   "Periodic", "Anti_periodic", "Periodic_air_gap", "Anti_periodic_air_gap"]
-    
+                       "Periodic", "Anti_periodic", "Periodic_air_gap", "Anti_periodic_air_gap"]
+
     def __init__(self):
         self.pb_type = self.MAGNETIC_PROBLEM_TYPE
 
@@ -31,9 +31,9 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         The circuittype parameter is 0 for a parallel-connected circuit and 1 for a series-connected circuit.
         """
         mi_addcircprop(circuit_name, current, circuit_type)
-        
-    def probdef(self, units, type_pb, depth, precision = 1.e-7, minangle = 30, freq = 0, acsolver = None):
-        
+
+    def probdef(self, units, type_pb, depth, precision, minangle, freq=0, acsolver=None):
+
         """
         -The acsolver parameter specifies which solver is to be used for AC problems: 0 for successive approximation, 1 for Newton.
         -Set freq to the desired frequency in Hertz. (only for magnetical problems)
@@ -44,7 +44,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         callfemm('mi_probdef' + doargs(*args))
 
     def setprevious(self, filename, type_previous):
-    
+
         """
         filename,prevtype) defines the previous solution to be used as the basis for an AC incremental 
         permeability or frozen permeability solution. The prevtype field is an integer that 
@@ -58,9 +58,9 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
 
     def setcurrent(self, circuit_name, current):
         self._steered_run("setcurrent", self.PREPROCES, circuit_name, current)
-    
-    def addmaterial(self, matname, mu_x = 0, mu_y = 0, Hc = 0, J = 0, Cduct = 0, Lam_d = 0, Phi_hmax = 0, lam_fill = 1.,
-                LamType = 0, Phi_hx = 0, Phi_hy = 0, nstr = None, dwire = None):
+
+    def addmaterial(self, matname, mu_x=0, mu_y=0, Hc=0, J=0, Cduct=0, Lam_d=0, Phi_hmax=0, lam_fill=1.,
+                    LamType=0, Phi_hx=0, Phi_hy=0, nstr=None, dwire=None):
         """
         mi_addmaterial(’matname’, mu x, mu y, H c, J, Cduct, Lam d, Phi hmax, lam fill, LamType, Phi hx, Phi hy, nstr, dwire) adds a 
         new material with called ’matname’ with the material properties:
@@ -96,13 +96,13 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
             args.append(nstr)
             args.append(dwire)
         callfemm('mi_addmaterial' + doargs(*args))
-        
+
     def addbhpoint(self, matname, bpoint, hpoint):
-        
+
         self._steered_run("addbhpoint", self.PREPROCES, matname, bpoint, hpoint)
-        
-    def addboundprop(self, Bound_name, BdryFormat = "Prescribed_a", A0 = 0, A1 = 0,
-                         A2 = 0, Phi = 0, Mu = 0, Sig = 0, C0 = 0, C1 = 0, Ia = 0, Oa = 0):
+
+    def addboundprop(self, Bound_name, BdryFormat="Prescribed_a", A0=0, A1=0,
+                     A2=0, Phi=0, Mu=0, Sig=0, C0=0, C1=0, Ia=0, Oa=0):
         '''
         list of boundaries conditions:
         ["Prescribed_a", "Small_skin_depth", "Mixed", "Strategic_dual_image", "Periodic" , "Anti_periodic", "Periodic_air_gap", "Anti_periodic_air_gap"]
@@ -116,10 +116,10 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         For an “Anti-Periodic”,  just set BdryFormat to ""Anti_Periodic"
         For a “Periodic Air Gap”, specify ia and oa, respectively the inner and outer boundary angles.
         For an “Anti-periodic Air Gap”,the same ia and oa parameters also apply here.”
-        '''            
+        '''
         self._steered_run("addboundprop", self.PREPROCES, Bound_name, A0, A1, A2, Phi, Mu, Sig, C0,
                           C1, self.MAG_BOUND_NAMES.index(BdryFormat), Ia, Oa)
-                       
+
     def setblockprop(self, blockname, automesh, meshsize, incircuit, magdir, group, turns):
         '''Set the selected block labels to have the properties: Block property ’blockname’.
         automesh: 0 = mesher defers to mesh size constraint defined in meshsize, 1 = mesher automatically chooses the mesh density.
@@ -128,9 +128,10 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         The magnetization is directed along an angle in measured in degrees denoted by the parameter magdir
         The number of turns associated with this label is denoted by turns.
         '''
-        self._steered_run("setblockprop", self.PREPROCES, blockname, automesh, meshsize, incircuit, magdir, group, turns)
-    
-    def setarcsegmentprop(self, maxsegdeg, propname, group, hide = False):
+        self._steered_run("setblockprop", self.PREPROCES, blockname, automesh, meshsize, incircuit, magdir, group,
+                          turns)
+
+    def setarcsegmentprop(self, maxsegdeg, propname, group, hide=False):
         '''
         Set the selected arc segments to:
         Meshed with elements that span at most maxsegdeg degrees per element Boundary property "propname"
@@ -142,8 +143,8 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         else:
             hide_index = 0
         self._steered_run("setarcsegmentprop", self.PREPROCES, maxsegdeg, propname, hide_index, group)
-    
-    def setsegmentprop(self, elementsize, propname, group, hide = False, automesh = 1):
+
+    def setsegmentprop(self, elementsize, propname, group, hide=False, automesh=1):
         '''
         Set the selected arc segments to:
         Meshed with elements that span at most maxsegdeg degrees per element Boundary property "propname"
@@ -155,7 +156,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         else:
             hide_index = 0
         self._steered_run("setsegmentprop", self.PREPROCES, propname, elementsize, automesh, hide_index, group)
-            
+
     def getcircuitproperties(self, circuit):
         """
         Used primarily to obtain impedance information associated with circuit properties. Properties are returned
@@ -166,18 +167,18 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         """
         results = self._steered_run("getcircuitproperties", self.POSTPROCES, circuit)
         output = {'current': results[0], 'vdrop': results[1], 'flux_linkage': results[2],
-                                   'power': results[1] * results[0]}
+                  'power': results[1] * results[0]}
         return output
 
-    def showdensityplot(self, upper_B, lower_B, type_plot, legend = True, grey_scale = False):
+    def showdensityplot(self, upper_B, lower_B, type_plot, legend=True, grey_scale=False):
         super(MagneticFEMMWrapper, self).__init__(upper_B, lower_B, type_plot, legend, grey_scale)
         args = [self.legend_index, self.gscale, self.upper_B, self.lower_B, self.DENSITY_PLOT_MAG.index(self.type_plot)]
         self._steered_run("showdensityplot", self.POSTPROCES, *args)
-        
+
     def movetranslate(self, dx, dy):
         """distance by which the selected objects are shifted."""
         self._steered_run("movetranslate", self.PREPROCES, dx, dy)
-        
+
     def movetranslate2(self, dx, dy, editaction):
         self._steered_run("movetranslate2", self.PREPROCES, dx, dy, editaction)
 
@@ -188,7 +189,7 @@ class MagneticFEMMWrapper(AbstractFEMMWrapper):
         Set the selected nodes to have the nodal
         property "propname" and group number groupno.
         """
-        self._steered_run("setnodeprop", self.PREPROCES, 'propname', groupno)
+        self._steered_run("setnodeprop", self.PREPROCES, propname, groupno)
 
     def getb(self, x, y):
         """
