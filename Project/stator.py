@@ -479,10 +479,10 @@ class Concentrated:
         self.femm_wrapper.smooth('on')
         self.femm_wrapper.groupselectblock(200)
 
-        if self.femm_wrapper == MagneticFEMMWrapper():
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
             SEdemi_totale = self.femm_wrapper.blockintegral(5)*1e6
-            print(SEdemi_totale)
         else:
+            print(self.femm_wrapper.blockintegral(1))
             SEdemi_totale = self.femm_wrapper.blockintegral(1)
             print(SEdemi_totale)
 
@@ -504,7 +504,7 @@ class Concentrated:
         ###from materials import Material_Th
         k_w = self.parameters['k_w'].value
         if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
-        Material_Mag.add_materials(J_den=J_den, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w, TempAimant=TempAimant, SNShunt=SNShunt)
+            Material_Mag.add_materials(J_den=J_den, SRatioLongueurActive=SRatioLongueurActive, k_w=k_w, TempAimant=TempAimant, SNShunt=SNShunt)
 
 
     def draw(self):
@@ -833,12 +833,18 @@ class Concentrated:
             self.femm_wrapper.selectsegment((SF2xrot+SGxrot)/2,(SF2yrot+SGyrot)/2)
             self.femm_wrapper.selectsegment((SJxrot+SK2xrot)/2,(SJyrot+SK2yrot)/2)
             self.femm_wrapper.selectsegment((SK1xrot+SL2xrot)/2,(SK1yrot+SL2yrot)/2)
-            self.femm_wrapper.setsegmentprop(TailleMaille,'TOLE',1,0,6)
+            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                self.femm_wrapper.setsegmentprop(TailleMaille,'TOLE',6)
+            else:
+                self.femm_wrapper.setsegmentprop(TailleMaille,'TOLE',6)
             self.femm_wrapper.clearselected()
 
             self.femm_wrapper.selectsegment((SGxrot+SHxrot)/2,(SGyrot+SHyrot)/2)
             self.femm_wrapper.selectsegment((SIxrot+SJxrot)/2,(SIyrot+SJyrot)/2)
-            self.femm_wrapper.setsegmentprop(TailleMailleEntrefer,'TOLE',1,0,6)
+            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                self.femm_wrapper.setsegmentprop(TailleMailleEntrefer,'TOLE',6)
+            else:
+                self.femm_wrapper.setsegmentprop(TailleMailleEntrefer,'TOLE', 6)
             self.femm_wrapper.clearselected()
 
             self.femm_wrapper.selectarcsegment(SPE1xrot,SPE1yrot)
@@ -870,19 +876,28 @@ class Concentrated:
         self.femm_wrapper.addblocklabel((SMx/2)*cos(SAngElec/(5*repetition))-((SL1y+SRe)/2)*sin(SAngElec/(5*repetition)),(SMx/2)*sin(SAngElec/(5*repetition))+((SL1y+SRe)/2)*cos(SAngElec/(5*repetition)))
         self.femm_wrapper.selectlabel((SMx/2)*cos(SAngElec/(5*repetition))-((SL1y+SRe)/2)*sin(SAngElec/(5*repetition)),(SMx/2)*sin(SAngElec/(5*repetition))+((SL1y+SRe)/2)*cos(SAngElec/(5*repetition)))
         MatiereTole='FeSi 0.35mm'
-        self.femm_wrapper.setblockprop(MatiereTole,0,TailleMaille,0,0,4,1)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setblockprop(MatiereTole,0,TailleMaille,0,0,4,1)
+        else:
+            self.femm_wrapper.setblockprop(MatiereTole, 0, TailleMaille, 4)
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.addblocklabel((2*SK1x+SF1x)/2,(SL2y+SK1y)/2)
         self.femm_wrapper.selectlabel((2*SK1x+SF1x)/2,(SL2y+SK1y)/2)
         MatiereTole='FeSi 0.35mm'
-        self.femm_wrapper.setblockprop(MatiereTole,0,TailleMaille,0,0,5,1)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setblockprop(MatiereTole,0,TailleMaille,0,0,5,1)
+        else:
+            self.femm_wrapper.setblockprop(MatiereTole, 0, TailleMaille, 5)
         self.femm_wrapper.clearselected()
 
         self.femm_wrapper.addblocklabel(-(SRe-TailleMaille)*sin(Angle/2),(SRe-TailleMaille)*cos(Angle/2))
         self.femm_wrapper.selectlabel(-(SRe-TailleMaille)*sin(Angle/2),(SRe-TailleMaille)*cos(Angle/2))
         self.femm_wrapper.MatiereTole='FeSi 0.35mm'
-        self.femm_wrapper.setblockprop(MatiereTole,0,TailleMaille,0,0,6,1)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setblockprop(MatiereTole,0,TailleMaille,0,0,6,1)
+        else:
+            self.femm_wrapper.setblockprop(MatiereTole, 0, TailleMaille, 6)
         self.femm_wrapper.clearselected()
 
 
@@ -920,24 +935,45 @@ class Concentrated:
 
                 if (Phase=='A'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('A+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('A-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('A-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('A-', 0, TailleMaille, 7)
                 if(Phase=='B'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('B+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('B+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('B+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('B-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('B-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('B-', 0, TailleMaille, 7)
                 if (Phase=='C'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('C+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('C+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('C+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('C-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('C-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('C-', 0, TailleMaille, 7)
                 self.femm_wrapper.clearselected()
             if repetition>1:
                 self.femm_wrapper.addblocklabel(((SK2x+SL1x)/2)*C-((SK1y+SL1y)/2)*S,((SK2x+SL1x)/2)*S+((SK1y+SL1y)/2)*C)
                 self.femm_wrapper.selectlabel(((SK2x+SL1x)/2)*C-((SK1y+SL1y)/2)*S,((SK2x+SL1x)/2)*S+((SK1y+SL1y)/2)*C)
-                self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                    self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                else:
+                    self.femm_wrapper.setblockprop('A+', 0, TailleMaille, 7)
 
         """         ------------------------------------------------------- """
         if (NbDemiEncoche==2):
@@ -984,19 +1020,37 @@ class Concentrated:
 
                 if  (Phase=='A'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('A+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('A-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('A-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('A-', 0, TailleMaille, 7)
                     if (Phase=='B'):
                         if (Sens==1):
-                            self.femm_wrapper.setblockprop('B+',0,TailleMaille,0,0,7,1)
+                            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                                self.femm_wrapper.setblockprop('B+',0,TailleMaille,0,0,7,1)
+                            else:
+                                self.femm_wrapper.setblockprop('B+', 0, TailleMaille, 7)
                         else:
-                            self.femm_wrapper.setblockprop('B-',0,TailleMaille,0,0,7,1)
+                            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                                self.femm_wrapper.setblockprop('B-',0,TailleMaille,0,0,7,1)
+                            else:
+                                self.femm_wrapper.setblockprop('B-', 0, TailleMaille, 7)
                     if (Phase=='C'):
                         if (Sens==1):
-                            self.femm_wrapper.setblockprop('C+',0,TailleMaille,0,0,7,1)
+                            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                                self.femm_wrapper.setblockprop('C+',0,TailleMaille,0,0,7,1)
+                            else:
+                                self.femm_wrapper.setblockprop('C+', 0, TailleMaille, 7)
                         else:
-                            self.femm_wrapper.setblockprop('C-',0,TailleMaille,0,0,7,1)
+                            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                                self.femm_wrapper.setblockprop('C-',0,TailleMaille,0,0,7,1)
+                            else:
+                                self.femm_wrapper.setblockprop('C-', 0, TailleMaille, 7)
 
         #       Half coil on the left side of the tooth """
                 self.femm_wrapper.addsegment(SMxrot,SMyrot,SNxrot,SNyrot)
@@ -1011,19 +1065,37 @@ class Concentrated:
 
                 if (Phase=='A'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('A+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('A+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('A-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('A-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('A-', 0, TailleMaille, 7)
                 if (Phase=='B'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('B+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('B+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('B+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('B-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('B-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('B-', 0, TailleMaille, 7)
                 if (Phase=='C'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('C+',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('C+',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('C+', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('C-',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('C-',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('C-', 0, TailleMaille, 7)
 
                 self.femm_wrapper.addblocklabel((SMxrot+SNxrot)/2,(SMyrot+SNyrot)/2)
                 self.femm_wrapper.selectlabel((SMxrot+SNxrot)/2,(SMyrot+SNyrot)/2)
@@ -1032,19 +1104,37 @@ class Concentrated:
                 Phase=BNomBob[jjBper+1]
                 if (Phase=='A'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('MatiereCuivre_pA',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('MatiereCuivre_pA',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('MatiereCuivre_pA', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('MatiereCuivre_nA',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('MatiereCuivre_nA',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('MatiereCuivre_nA', 0, TailleMaille, 7)
                 if (Phase=='B'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('MatiereCuivre_pB',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('MatiereCuivre_pB',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('MatiereCuivre_pB', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('MatiereCuivre_nB',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('MatiereCuivre_nB',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('MatiereCuivre_nB', 0, TailleMaille, 7)
                 if (Phase=='C'):
                     if (Sens==1):
-                        self.femm_wrapper.setblockprop('MatiereCuivre_pC',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('MatiereCuivre_pC',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('MatiereCuivre_pC', 0, TailleMaille, 7)
                     else:
-                        self.femm_wrapper.setblockprop('MatiereCuivre_nC',0,TailleMaille,0,0,7,1)
+                        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                            self.femm_wrapper.setblockprop('MatiereCuivre_nC',0,TailleMaille,0,0,7,1)
+                        else:
+                            self.femm_wrapper.setblockprop('MatiereCuivre_nC', 0, TailleMaille, 7)
 
                 jjBper=jjBper+2
         """ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ """
@@ -1234,7 +1324,10 @@ class Concentrated:
                 """trace entrefer"""
                 self.femm_wrapper.addblocklabel(-(RRe+(ALo+e)/2)*sin(Angle/2),(RRe+(ALo+e)/2)*cos(Angle/2))
                 self.femm_wrapper.selectlabel(-(RRe+(ALo+e)/2)*sin(Angle/2),(RRe+(ALo+e)/2)*cos(Angle/2))
-                self.femm_wrapper.setblockprop('air',0,TailleMailleEntrefer,0,0,2,1)
+                if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                    self.femm_wrapper.setblockprop('air',0,TailleMailleEntrefer,0,0,2,1)
+                else:
+                    self.femm_wrapper.setblockprop('air', 0, TailleMailleEntrefer, 2)
                 self.femm_wrapper.clearselected()
 
     def __str__(self):

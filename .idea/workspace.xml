@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22f63c58-7470-43ac-8257-88a95c0817e6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/PMSM_FEMM.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PMSM_FEMM.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/Half_solt.fem.fem" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Half_solt.fem.fem" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/computation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/computation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/materials.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/materials.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/motor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/motor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/rotor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/rotor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/stator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/stator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/femm_wrapper/femm_abstract_wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/femm_wrapper/femm_abstract_wrapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/femm_wrapper/femm_mag_wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/femm_wrapper/femm_mag_wrapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/femm_wrapper/femm_thermal_wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/femm_wrapper/femm_thermal_wrapper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +29,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Stage Aurelien/arthur_piat" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
@@ -86,11 +78,6 @@
           <url>file://$PROJECT_DIR$/femm_wrapper/femm_mag_wrapper.py</url>
           <line>43</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Project/stator.py</url>
-          <line>377</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

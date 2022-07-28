@@ -8,6 +8,9 @@ from variable import Variable
 import pandas as pd
 import ipywidgets as widgets
 
+from femm_wrapper.femm_mag_wrapper import MagneticFEMMWrapper
+from femm_wrapper.femm_thermal_wrapper import ThermalFEMMWrapper
+
 class BaseRotor:
 
     'Solver Parameters '
@@ -1075,7 +1078,7 @@ class Halbach_GeomGeneration(BaseRotor):
             self.femm_wrapper.selectsegment((RGxrot+RHxrot)/2,(RGyrot+RHyrot)/2)
             self.femm_wrapper.selectsegment((RIxrot+RJxrot)/2,(RIyrot+RJyrot)/2)
 
-            self.femm_wrapper.setsegmentprop(TailleMaille, 'aimant',1,0,3)
+            self.femm_wrapper.setsegmentprop(TailleMaille, 'aimant',3)
             self.femm_wrapper.clearselected()
             
             self.femm_wrapper.selectarcsegment (RHxrot,RHyrot)
@@ -1089,7 +1092,10 @@ class Halbach_GeomGeneration(BaseRotor):
 
             self.femm_wrapper.addblocklabel(RLabMagxrot,RLabMagyrot)
             self.femm_wrapper.selectlabel(RLabMagxrot,RLabMagyrot)
-            self.femm_wrapper.setblockprop('Sm2Co17',0,TailleMaille,0,AngleDeg+k-RAngMagDeg,3,1) 
+            if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+                self.femm_wrapper.setblockprop('Sm2Co17',0,TailleMaille,0,AngleDeg+k-RAngMagDeg,3,1)
+            else:
+                self.femm_wrapper.setblockprop('Sm2Co17', 0, TailleMaille, 3)
             self.femm_wrapper.clearselected()
             
             k=k-45
@@ -1097,7 +1103,10 @@ class Halbach_GeomGeneration(BaseRotor):
 
         self.femm_wrapper.addblocklabel(-((RRe+RRi)/2)*sin(Angle/2),((RRe+RRi)/2)*cos(Angle/2))
         self.femm_wrapper.selectlabel(-((RRe+RRi)/2)*sin(Angle/2),((RRe+RRi)/2)*cos(Angle/2))
-        self.femm_wrapper.setblockprop('FeSi 0.35mm',0,TailleMaille,0,0,9,1)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setblockprop('FeSi 0.35mm',0,TailleMaille,0,0,9,1)
+        else:
+            self.femm_wrapper.setblockprop('FeSi 0.35mm', 0, TailleMaille, 9)
         self.femm_wrapper.clearselected()
         """ draw insider tuber"""
         self.femm_wrapper.addnode(RRi,0)
@@ -1123,7 +1132,10 @@ class Halbach_GeomGeneration(BaseRotor):
         self.femm_wrapper.clearselected()
         self.femm_wrapper.addblocklabel(-(RRi-TailleMaille)*sin(Angle/2),(RRi-TailleMaille)*cos(Angle/2))
         self.femm_wrapper.selectlabel(-(RRi-TailleMaille)*sin(Angle/2),(RRi-TailleMaille)*cos(Angle/2))
-        self.femm_wrapper.setblockprop('air',0,2,0,0,1,1)
+        if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+            self.femm_wrapper.setblockprop('air',0,2,0,0,1,1)
+        else:
+            self.femm_wrapper.setblockprop('air',0,2,1)
         self.femm_wrapper.clearselected() 
         
         """ Carrying out the cut """ # Drawing the needed segment for the cut
