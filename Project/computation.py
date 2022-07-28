@@ -48,10 +48,10 @@ def compute(motor):
     femm_wrapper.addarc(-LRe, 0, LRe, 0, 180, 2)
     femm_wrapper.addblocklabel((LRe + SRe) / 2, 0)
     femm_wrapper.selectlabel((LRe + SRe) / 2, 0)
-    if isinstance(self.femm_wrapper, MagneticFEMMWrapper):
+    if isinstance(femm_wrapper, MagneticFEMMWrapper):
         femm_wrapper.setblockprop('air', 0, 2, 0, 0, 8, 1)
     else:
-        femm_wrapper.setblockprop('air', 0, 2, 0, 0, 8, 1)
+        femm_wrapper.setblockprop('air', 0, 2, 8)
     femm_wrapper.clearselected()
     femm_wrapper.selectarcsegment(0, LRe)
     femm_wrapper.selectarcsegment(0, -LRe)
